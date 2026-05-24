@@ -1,0 +1,49 @@
+<div style="font-family:Arial; max-width:500px; margin:auto;">
+
+<h2>Bestellung</h2>
+
+<label><input type="checkbox" id="sofa"> Sofa</label>
+<input type="number" id="sofaAmount" placeholder="Stück"><br><br>
+
+<label><input type="checkbox" id="stuhl"> Stuhl</label>
+<input type="number" id="stuhlAmount" placeholder="Stück"><br><br>
+
+<label><input type="checkbox" id="tisch"> Tisch</label>
+<input type="number" id="tischAmount" placeholder="Stück"><br><br>
+
+<button onclick="sendData()" style="padding:10px; width:100%; background:#1a73e8; color:white;">
+Absenden
+</button>
+
+<p id="status"></p>
+
+</div>
+
+<script>
+async function sendData() {
+
+  const items = [];
+
+  if(document.getElementById("sofa").checked){
+    items.push({name:"Sofa", amount:document.getElementById("sofaAmount").value || 1});
+  }
+
+  if(document.getElementById("stuhl").checked){
+    items.push({name:"Stuhl", amount:document.getElementById("stuhlAmount").value || 1});
+  }
+
+  if(document.getElementById("tisch").checked){
+    items.push({name:"Tisch", amount:document.getElementById("tischAmount").value || 1});
+  }
+
+  document.getElementById("status").innerText = "Sende...";
+
+  await fetch("DEIN_SCRIPT_URL", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({items})
+  });
+
+  document.getElementById("status").innerText = "Gesendet!";
+}
+</script>
