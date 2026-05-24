@@ -15,29 +15,23 @@ body {
 input {
   width: 100%;
   padding: 8px;
-  margin: 5px 0 10px 0;
+  margin: 6px 0 12px 0;
   box-sizing: border-box;
 }
 
-label {
-  font-weight: bold;
-}
-
 button {
-  margin-top: 20px;
   width: 100%;
   padding: 12px;
   background: #1a73e8;
   color: white;
   border: none;
-  cursor: pointer;
   font-size: 16px;
+  cursor: pointer;
 }
 
 #status {
-  margin-top: 15px;
+  margin-top: 10px;
   font-weight: bold;
-  color: red;
 }
 </style>
 </head>
@@ -46,20 +40,17 @@ button {
 
 <h2>Kundendaten</h2>
 
-<label>Vorname *</label>
-<input type="text" id="vorname">
+<input type="text" id="vorname" placeholder="Vorname *">
+<input type="text" id="nachname" placeholder="Nachname *">
+<input type="email" id="email" placeholder="E-Mail *">
+<input type="text" id="telefon" placeholder="Telefon (optional)">
 
-<label>Nachname *</label>
-<input type="text" id="nachname">
+<h3>Adresse</h3>
 
-<label>E-Mail *</label>
-<input type="email" id="email">
-
-<label>Telefon (optional)</label>
-<input type="text" id="telefon">
-
-<label>Adresse *</label>
-<input type="text" id="adresse">
+<input type="text" id="strasse" placeholder="Straße + Hausnummer *">
+<input type="text" id="plz" placeholder="Postleitzahl *">
+<input type="text" id="ort" placeholder="Ort *">
+<input type="text" id="bundesland" placeholder="Bundesland *">
 
 <hr>
 
@@ -68,12 +59,8 @@ button {
 <label><input type="checkbox" id="sofa"> Sofa</label>
 <input type="number" id="sofaAmount" placeholder="Stück">
 
-<br><br>
-
 <label><input type="checkbox" id="stuhl"> Stuhl</label>
 <input type="number" id="stuhlAmount" placeholder="Stück">
-
-<br><br>
 
 <label><input type="checkbox" id="tisch"> Tisch</label>
 <input type="number" id="tischAmount" placeholder="Stück">
@@ -88,20 +75,25 @@ button {
 async function sendData() {
 
   const status = document.getElementById("status");
-  status.style.color = "red";
 
-  // 🔴 Pflichtfelder prüfen
+  // Kundendaten
   const vorname = document.getElementById("vorname").value.trim();
   const nachname = document.getElementById("nachname").value.trim();
   const email = document.getElementById("email").value.trim();
-  const adresse = document.getElementById("adresse").value.trim();
   const telefon = document.getElementById("telefon").value.trim();
 
-  if(!vorname || !nachname || !email || !adresse){
+  const strasse = document.getElementById("strasse").value.trim();
+  const plz = document.getElementById("plz").value.trim();
+  const ort = document.getElementById("ort").value.trim();
+  const bundesland = document.getElementById("bundesland").value.trim();
+
+  // Pflichtprüfung
+  if(!vorname || !nachname || !email || !strasse || !plz || !ort || !bundesland){
     status.innerText = "Bitte alle Pflichtfelder ausfüllen!";
     return;
   }
 
+  // Bestellung
   const items = [];
 
   if(document.getElementById("sofa").checked){
@@ -125,31 +117,27 @@ async function sendData() {
 
   try {
 
-    const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbxdFWwtX3-FcVaOKgMio5ZeoGM7Ngk13jTt_v30f2sDA8PHu7_deu3psd7rnrM8DjsLEA/exec",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          customer: {
-            vorname,
-            nachname,
-            email,
-            telefon,
-            adresse
-          },
-          items
-        })
-      }
-    );
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxdFWwtX3-FcVaOKgMio5ZeoGM7Ngk13jTt_v30f2sDA8PHu7_deu3psd7rnrM8DjsLEA/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        customer: {
+          vorname,
+          nachname,
+          email,
+          telefon,
+          adresse: { strasse, plz, ort, bundesland }
+        },
+        items
+      })
+    });
 
     const text = await response.text();
-    console.log(text);
 
-    status.style.color = "green";
-    status.innerText = "Bestellung erfolgreich gesendet!";
+    status.innerText = text === "OK"
+      ? "Bestellung erfolgreich!"
+      : "Fehler beim Senden";
 
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
     status.innerText = "Fehler beim Senden!";
   }
 }
