@@ -217,18 +217,22 @@ async function send(){
 
   document.getElementById("status").innerText = "Sende...";
 
-  try{
+ try{
 
-    await fetch("https://script.google.com/macros/s/AKfycbzLqfZ9zMz4ccJZl5BN_R-abKrqrcLS1HrMpjZ3EU90bSMl7Z8jDWAOrXmU16LH002hgQ/exec",{
-      method:"POST",
-      body:JSON.stringify(data)
-    });
+  await fetch("DEINE_SCRIPT_URL_HIER",{
+    method:"POST",
+    body:JSON.stringify(data)
+  });
 
-    document.getElementById("status").innerText = "Erfolgreich gesendet!";
+  // 👉 kleine Pause damit Nutzer Feedback sieht
+  document.getElementById("status").innerText = "Erfolgreich gesendet!";
 
-  }catch(e){
-    document.getElementById("status").innerText = "Fehler beim Senden!";
-  }
+  setTimeout(() => {
+    window.location.href = "success.html";
+  }, 800);
+
+}catch(e){
+  document.getElementById("status").innerText = "Fehler beim Senden!";
 }
 </script>
 
