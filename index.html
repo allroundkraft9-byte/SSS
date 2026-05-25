@@ -1,99 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bestellung</title>
+
+<style>
+body{
+  font-family: Arial;
+  max-width: 750px;
+  margin:auto;
+  background:#f5f5f5;
+  padding:20px;
+}
+
+.box{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+}
+
+input, textarea{
+  width:100%;
+  padding:10px;
+  margin:5px 0 10px 0;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:5px 0;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  background:#1a73e8;
+  color:white;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{opacity:0.9}
+
+#status{
+  margin-top:10px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Kundendaten</h2>
+
+<input id="vorname" placeholder="Vorname *">
+<input id="nachname" placeholder="Nachname *">
+<input id="email" placeholder="E-Mail *">
+
+<h3>Adresse</h3>
+<input id="strasse" placeholder="Straße + Hausnummer *">
+<input id="plz" placeholder="PLZ *">
+<input id="ort" placeholder="Ort *">
+<input id="bundesland" placeholder="Bundesland *">
+
+<h3>Termin</h3>
+<input id="datum" type="date">
+<input id="uhrzeit" type="time">
+
+<h3>Service</h3>
+<label><input type="checkbox" id="abbau"> Abbau</label>
+<label><input type="checkbox" id="transport"> Transport</label>
+<label><input type="checkbox" id="aufbau"> Aufbau</label>
+
+<h3>Transporter</h3>
+<label><input type="radio" name="t" value="vorhanden"> vorhanden</label>
+<label><input type="radio" name="t" value="nicht vorhanden"> nicht vorhanden</label>
+
+<h3>Möbel</h3>
+
+<div class="row">Sessel <input id="sessel" type="number" value="0"></div>
+<div class="row">Stuhl <input id="stuhl" type="number" value="0"></div>
+<div class="row">Hocker <input id="hocker" type="number" value="0"></div>
+<div class="row">Sofa <input id="sofa" type="number" value="0"></div>
+<div class="row">Couch <input id="couch" type="number" value="0"></div>
+<div class="row">Tisch <input id="tisch" type="number" value="0"></div>
+<div class="row">Bett <input id="bett" type="number" value="0"></div>
+
+<h3>Anmerkung</h3>
+<textarea id="note"></textarea>
+
+<button onclick="send()">Absenden</button>
+
+<div id="status"></div>
+
+</div>
+
 <script>
 async function send(){
 
   const status = document.getElementById("status");
-
-  // 🔴 Pflichtfelder prüfen
-  if(!vorname.value || !nachname.value || !email.value || !strasse.value || !plz.value || !ort.value || !bundesland.value){
-    status.innerText = "Bitte alle Pflichtfelder ausfüllen!";
-    status.style.color = "red";
-    return;
-  }
-
-  // 🧾 Daten aufbauen (sauber & sicher)
-  const data = {
-    customer: {
-      vorname: vorname.value,
-      nachname: nachname.value,
-      email: email.value,
-      adresse: {
-        strasse: strasse.value,
-        plz: plz.value,
-        ort: ort.value,
-        bundesland: bundesland.value
-      }
-    },
-
-    service: {
-      abbau: abbau.checked,
-      transport: transport.checked,
-      aufbau: aufbau.checked,
-      transporter: document.querySelector('input[name="t"]:checked')?.value || "nicht angegeben"
-    },
-
-    termin: {
-      datum: datum.value,
-      uhrzeit: uhrzeit.value
-    },
-
-    items: [
-      sessel.checked ? {name:"Sessel", amount: Number(sesselAmount.value || 1)} : null,
-      stuhl.checked ? {name:"Stuhl", amount: Number(stuhlAmount.value || 1)} : null,
-      hocker.checked ? {name:"Hocker", amount: Number(hockerAmount.value || 1)} : null,
-      couch.checked ? {name:"Couch", amount: Number(couchAmount.value || 1)} : null,
-      sofa.checked ? {name:"Sofa", amount: Number(sofaAmount.value || 1)} : null,
-      liege.checked ? {name:"Liege", amount: Number(liegeAmount.value || 1)} : null,
-      tisch.checked ? {name:"Tisch", amount: Number(tischAmount.value || 1)} : null,
-      schreibtisch.checked ? {name:"Schreibtisch", amount: Number(schreibtischAmount.value || 1)} : null,
-      regal.checked ? {name:"Regal", amount: Number(regalAmount.value || 1)} : null,
-      kommode.checked ? {name:"Kommode", amount: Number(kommodeAmount.value || 1)} : null,
-      waschmaschine.checked ? {name:"Waschmaschine", amount: Number(waschmaschineAmount.value || 1)} : null,
-      trockner.checked ? {name:"Trockner", amount: Number(trocknerAmount.value || 1)} : null,
-      fernseher.checked ? {name:"Fernseher", amount: Number(fernseherAmount.value || 1)} : null,
-      geschirrspueler.checked ? {name:"Geschirrspüler", amount: Number(geschirrspuelerAmount.value || 1)} : null,
-      teppich.checked ? {name:"Teppich", amount: Number(teppichAmount.value || 1)} : null,
-      matratzen.checked ? {name:"Matratzen", amount: Number(matratzenAmount.value || 1)} : null,
-      fahrrad.checked ? {name:"Fahrrad", amount: Number(fahrradAmount.value || 1)} : null,
-      kuehlschrank.checked ? {name:"Kühl-/Gefrierschrank", amount: Number(kuehlschrankAmount.value || 1)} : null
-    ].filter(Boolean),
-
-    note: note.value
-  };
+  status.style.color = "black";
+  status.innerText = "Sende...";
 
   try{
 
-    status.style.color = "black";
-    status.innerText = "Sende...";
+    // 🔥 sichere DOM-Abfragen (kein Crash mehr)
+    const get = id => document.getElementById(id);
 
-    const response = await fetch("DEINE_SCRIPT_URL_HIER", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+    const data = {
+      customer:{
+        vorname:get("vorname").value,
+        nachname:get("nachname").value,
+        email:get("email").value,
+        adresse:{
+          strasse:get("strasse").value,
+          plz:get("plz").value,
+          ort:get("ort").value,
+          bundesland:get("bundesland").value
+        }
       },
-      body: JSON.stringify(data)
+
+      service:{
+        abbau:get("abbau").checked,
+        transport:get("transport").checked,
+        aufbau:get("aufbau").checked,
+        transporter:document.querySelector('input[name="t"]:checked')?.value || ""
+      },
+
+      termin:{
+        datum:get("datum").value,
+        uhrzeit:get("uhrzeit").value
+      },
+
+      items:[
+        {name:"Sessel",amount:Number(get("sessel").value)},
+        {name:"Stuhl",amount:Number(get("stuhl").value)},
+        {name:"Hocker",amount:Number(get("hocker").value)},
+        {name:"Sofa",amount:Number(get("sofa").value)},
+        {name:"Couch",amount:Number(get("couch").value)},
+        {name:"Tisch",amount:Number(get("tisch").value)},
+        {name:"Bett",amount:Number(get("bett").value)}
+      ].filter(i => i.amount > 0),
+
+      note:get("note").value
+    };
+
+    const response = await fetch("DEINE_SCRIPT_URL_HIER",{
+      method:"POST",
+      headers:{
+        "Content-Type":"text/plain;charset=utf-8"
+      },
+      body:JSON.stringify(data)
     });
 
     const text = await response.text();
-    console.log("Server Antwort:", text);
+    console.log("SERVER:",text);
 
-    if(text.includes("OK")){
-      status.style.color = "green";
-      status.innerText = "Erfolgreich gesendet!";
+    if(text && text.includes("OK")){
+      status.style.color="green";
+      status.innerText="Erfolgreich gesendet!";
 
-      // 👉 OPTIONAL: Weiterleitung
-      setTimeout(() => {
-        window.location.href = "success.html";
-      }, 800);
+      setTimeout(()=>{
+        window.location.href="success.html";
+      },800);
 
     } else {
-      status.style.color = "red";
-      status.innerText = "Server Fehler: " + text;
+      status.style.color="red";
+      status.innerText="Server Fehler: "+text;
     }
 
-  }catch(error){
-    console.error(error);
-    status.style.color = "red";
-    status.innerText = "Fehler beim Senden!";
+  }catch(err){
+    console.error(err);
+    status.style.color="red";
+    status.innerText="Fehler beim Senden (Netzwerk)";
   }
 }
 </script>
+
+</body>
+</html>
