@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Möbel Bestellsystem</title>
+<title>Möbel Anfrage</title>
 
 <style>
 body{
@@ -14,7 +14,7 @@ body{
 }
 
 .container{
-  max-width:900px;
+  max-width:950px;
   margin:auto;
   background:white;
   padding:25px;
@@ -24,18 +24,15 @@ body{
 h2{
   border-left:5px solid #1a73e8;
   padding-left:10px;
+  margin-top:25px;
 }
 
 input, textarea{
   width:100%;
   padding:10px;
-  margin:6px 0 14px 0;
+  margin:6px 0 12px 0;
   border:1px solid #ccc;
   border-radius:6px;
-}
-
-.section{
-  margin-bottom:25px;
 }
 
 .row{
@@ -46,7 +43,7 @@ input, textarea{
 
 .card{
   flex:1;
-  min-width:250px;
+  min-width:220px;
   background:#f7f9fc;
   padding:10px;
   border-radius:8px;
@@ -66,10 +63,6 @@ button{
   cursor:pointer;
 }
 
-button:hover{
-  opacity:0.9;
-}
-
 #status{
   margin-top:10px;
   font-weight:bold;
@@ -81,85 +74,92 @@ button:hover{
 
 <div class="container">
 
-<h1>Möbel Bestellung</h1>
+<h1>Möbel Anfrage</h1>
 
-<!-- KUNDEN -->
-<div class="section">
+<!-- KUNDE -->
 <h2>Kundendaten</h2>
 <input id="vorname" placeholder="Vorname *">
 <input id="nachname" placeholder="Nachname *">
 <input id="email" placeholder="E-Mail *">
-</div>
 
 <!-- ADRESSE -->
-<div class="section">
 <h2>Adresse</h2>
 <input id="strasse" placeholder="Straße + Hausnummer *">
 <input id="plz" placeholder="PLZ *">
 <input id="ort" placeholder="Ort *">
 <input id="bundesland" placeholder="Bundesland *">
-</div>
+
+<!-- TRANSPORT -->
+<h2>Transportziel</h2>
+<input id="ziel" placeholder="Wohin sollen die Möbel geliefert werden? *">
 
 <!-- TERMIN -->
-<div class="section">
 <h2>Termin</h2>
 <input id="datum" type="date">
 <input id="uhrzeit" type="time">
-</div>
 
 <!-- SERVICE -->
-<div class="section">
 <h2>Service</h2>
 <label><input type="checkbox" id="abbau"> Abbau</label>
 <label><input type="checkbox" id="transport"> Transport</label>
 <label><input type="checkbox" id="aufbau"> Aufbau</label>
-<br><br>
-<label><input type="radio" name="t" value="vorhanden"> Transporter vorhanden</label>
-<label><input type="radio" name="t" value="nicht vorhanden"> Transporter nicht vorhanden</label>
-</div>
 
-<!-- MÖBEL (WICHTIG: IN EINER REIHE PRO KATEGORIE) -->
-<div class="section">
+<br><br>
+
+<label><input type="radio" name="t" value="vorhanden"> Transporter vorhanden</label>
+<label><input type="radio" name="t" value="nicht vorhanden"> Kein Transporter</label>
+
+<!-- MÖBEL (ALLE KATEGORIEN VOLLSTÄNDIG) -->
 <h2>Möbel</h2>
 
 <div class="row">
-
 <div class="card">Sessel <input id="sessel" type="number" value="0"></div>
 <div class="card">Stuhl <input id="stuhl" type="number" value="0"></div>
 <div class="card">Hocker <input id="hocker" type="number" value="0"></div>
+</div>
 
-<div class="card">Sofa <input id="sofa" type="number" value="0"></div>
-<div class="card">Couch <input id="couch" type="number" value="0"></div>
-<div class="card">Liege <input id="liege" type="number" value="0"></div>
-
-<div class="card">Tisch <input id="tisch" type="number" value="0"></div>
-<div class="card">Schreibtisch <input id="schreibtisch" type="number" value="0"></div>
-
+<div class="row">
 <div class="card">Regal <input id="regal" type="number" value="0"></div>
 <div class="card">Kommode <input id="kommode" type="number" value="0"></div>
+<div class="card">Koffer <input id="koffer" type="number" value="0"></div>
+</div>
 
+<div class="row">
+<div class="card">Couch <input id="couch" type="number" value="0"></div>
+<div class="card">Liege <input id="liege" type="number" value="0"></div>
+<div class="card">Sofa <input id="sofa" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Tisch <input id="tisch" type="number" value="0"></div>
+<div class="card">Schreibtisch <input id="schreibtisch" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Bettgestell <input id="bett" type="number" value="0"></div>
+<div class="card">Matratzen <input id="matratzen" type="number" value="0"></div>
+</div>
+
+<div class="row">
 <div class="card">Waschmaschine <input id="waschmaschine" type="number" value="0"></div>
 <div class="card">Trockner <input id="trockner" type="number" value="0"></div>
-
 <div class="card">Geschirrspüler <input id="spueler" type="number" value="0"></div>
-<div class="card">Herd/Ofen <input id="herd" type="number" value="0"></div>
-
-<div class="card">Fernseher <input id="tv" type="number" value="0"></div>
-<div class="card">Teppich <input id="teppich" type="number" value="0"></div>
-
-<div class="card">Matratzen <input id="matratzen" type="number" value="0"></div>
-<div class="card">Fahrrad <input id="fahrrad" type="number" value="0"></div>
-
-<div class="card">Kühlschrank <input id="kuehlschrank" type="number" value="0"></div>
-
 </div>
+
+<div class="row">
+<div class="card">Herd/Backofen <input id="herd" type="number" value="0"></div>
+<div class="card">Fernseher <input id="tv" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Teppich <input id="teppich" type="number" value="0"></div>
+<div class="card">Fahrrad <input id="fahrrad" type="number" value="0"></div>
+<div class="card">Kühlschrank <input id="kuehlschrank" type="number" value="0"></div>
 </div>
 
 <!-- NOTIZ -->
-<div class="section">
 <h2>Anmerkung</h2>
 <textarea id="note"></textarea>
-</div>
 
 <button onclick="send()">ABSENDEN</button>
 
@@ -176,57 +176,65 @@ async function send(){
   const get = id => document.getElementById(id);
 
   const items = [
-    {name:"Sessel",v:sessel.value},
-    {name:"Stuhl",v:stuhl.value},
-    {name:"Hocker",v:hocker.value},
-    {name:"Sofa",v:sofa.value},
-    {name:"Couch",v:couch.value},
-    {name:"Liege",v:liege.value},
-    {name:"Tisch",v:tisch.value},
-    {name:"Schreibtisch",v:schreibtisch.value},
-    {name:"Regal",v:regal.value},
-    {name:"Kommode",v:kommode.value},
-    {name:"Waschmaschine",v:waschmaschine.value},
-    {name:"Trockner",v:trockner.value},
-    {name:"Geschirrspüler",v:spueler.value},
-    {name:"Herd/Ofen",v:herd.value},
-    {name:"Fernseher",v:tv.value},
-    {name:"Teppich",v:teppich.value},
-    {name:"Matratzen",v:matratzen.value},
-    {name:"Fahrrad",v:fahrrad.value},
-    {name:"Kühlschrank",v:kuehlschrank.value}
-  ].filter(i => Number(i.v) > 0)
-   .map(i => ({name:i.name,amount:Number(i.v)}));
+    ["Sessel",sessel.value],
+    ["Stuhl",stuhl.value],
+    ["Hocker",hocker.value],
+    ["Regal",regal.value],
+    ["Kommode",kommode.value],
+    ["Koffer",koffer.value],
+    ["Couch",couch.value],
+    ["Liege",liege.value],
+    ["Sofa",sofa.value],
+    ["Tisch",tisch.value],
+    ["Schreibtisch",schreibtisch.value],
+    ["Bettgestell",bett.value],
+    ["Matratzen",matratzen.value],
+    ["Waschmaschine",waschmaschine.value],
+    ["Trockner",trockner.value],
+    ["Geschirrspüler",spueler.value],
+    ["Herd/Backofen",herd.value],
+    ["Fernseher",tv.value],
+    ["Teppich",teppich.value],
+    ["Fahrrad",fahrrad.value],
+    ["Kühlschrank",kuehlschrank.value]
+  ]
+  .filter(i => Number(i[1]) > 0)
+  .map(i => ({name:i[0],amount:Number(i[1])}));
 
   const data = {
     customer:{
-      vorname:get("vorname").value,
-      nachname:get("nachname").value,
-      email:get("email").value,
+      vorname:vorname.value,
+      nachname:nachname.value,
+      email:email.value,
       adresse:{
-        strasse:get("strasse").value,
-        plz:get("plz").value,
-        ort:get("ort").value,
-        bundesland:get("bundesland").value
+        strasse:strasse.value,
+        plz:plz.value,
+        ort:ort.value,
+        bundesland:bundesland.value
       }
     },
+
+    transportZiel: ziel.value,
+
     service:{
       abbau:abbau.checked,
       transport:transport.checked,
       aufbau:aufbau.checked,
       transporter:document.querySelector('input[name="t"]:checked')?.value || ""
     },
+
     termin:{
       datum:datum.value,
       uhrzeit:uhrzeit.value
     },
+
     items:items,
     note:note.value
   };
 
   try{
 
-    const res = await fetch("https://script.google.com/macros/s/AKfycbz0koZ-OHeFmGMn3CDxK6wbxAtKjgbPUartQdemTEZ-ZDBYDegKWXhZR7m0gSo4opw_nQ/exec",{
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzKxyQnd8w4gHiWR9pcB-atY6kt_SUS8ojHhcMfAJfzQlwYhVhRzA_AxQlm9l1WBWebNg/exec",{
       method:"POST",
       body:JSON.stringify(data)
     });
@@ -234,13 +242,13 @@ async function send(){
     const text = await res.text();
 
     if(text.includes("OK")){
-      window.location.href="success.html";
+      status.innerText = "✔ Anfrage erfolgreich gesendet!";
     }else{
-      status.innerText="Fehler: "+text;
+      status.innerText = "Fehler: "+text;
     }
 
   }catch(e){
-    status.innerText="Netzwerkfehler";
+    status.innerText = "Netzwerkfehler";
   }
 }
 </script>
