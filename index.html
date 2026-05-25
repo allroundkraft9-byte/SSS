@@ -115,26 +115,105 @@ async function sendData() {
 
   status.innerText = "Sende...";
 
+ <script>
+async function sendData() {
+
+  const status = document.getElementById("status");
+  status.style.color = "black";
+
+  // Kundendaten
+  const vorname = document.getElementById("vorname").value.trim();
+  const nachname = document.getElementById("nachname").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const telefon = document.getElementById("telefon").value.trim();
+
+  const strasse = document.getElementById("strasse").value.trim();
+  const plz = document.getElementById("plz").value.trim();
+  const ort = document.getElementById("ort").value.trim();
+  const bundesland = document.getElementById("bundesland").value.trim();
+
+  // Pflichtfelder prüfen
+  if (!vorname || !nachname || !email || !strasse || !plz || !ort || !bundesland) {
+    status.style.color = "red";
+    status.innerText = "Bitte alle Pflichtfelder ausfüllen!";
+    return;
+  }
+
+  // Artikel sammeln
+  const items = [];
+
+  if(document.getElementById("sofa").checked){
+    items.push({
+      name: "Sofa",
+      amount: document.getElementById("sofaAmount").value || 1
+    });
+  }
+
+  if(document.getElementById("stuhl").checked){
+    items.push({
+      name: "Stuhl",
+      amount: document.getElementById("stuhlAmount").value || 1
+    });
+  }
+
+  if(document.getElementById("tisch").checked){
+    items.push({
+      name: "Tisch",
+      amount: document.getElementById("tischAmount").value || 1
+    });
+  }
+
+  if(items.length === 0){
+    status.style.color = "red";
+    status.innerText = "Bitte mindestens einen Artikel auswählen!";
+    return;
+  }
+
+  status.innerText = "Sende...";
+
   try {
 
-    const response = await fetch("https://script.google.com/macros/s/AKfycbwVsGsMgrV_QfwbvyDkqdoRMH8HtWHWLzEUbER9WyfBVMvQy-IvnxGEg9zybYiHwaYMmw/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        customer: {
-          vorname,
-          nachname,
-          email,
-          telefon,
-          adresse: {
-            strasse,
-            plz,
-            ort,
-            bundesland
-          }
-        },
-        items
-      })
-    });
+    const response = await fetch(
+      "https://script.google.com/macros/s/AKfycbx3SiNuCFaSqNdkdT9OA6hKktSAQh9kEqvNLoQ9-xL8U7a271kHTJPxNVJBtpkHGeRREA/exec",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          customer: {
+            vorname,
+            nachname,
+            email,
+            telefon,
+            adresse: {
+              strasse,
+              plz,
+              ort,
+              bundesland
+            }
+          },
+          items
+        })
+      }
+    );
+
+    const text = await response.text();
+
+    console.log(text);
+
+    if(text.includes("OK")){
+      status.style.color = "green";
+      status.innerText = "Bestellung erfolgreich gesendet!";
+    } else {
+      status.style.color = "red";
+      status.innerText = "Server Fehler: " + text;
+    }
+
+  } catch(error) {
+    console.error(error);
+    status.style.color = "red";
+    status.innerText = "Fehler beim Senden!";
+  }
+}
+</script>;
 
     const text = await response.text();
 
