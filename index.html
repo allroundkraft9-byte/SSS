@@ -8,22 +8,29 @@
 <style>
 body{
   font-family: Arial;
-  max-width: 750px;
-  margin:auto;
-  background:#f5f5f5;
+  background:#f4f4f4;
   padding:20px;
 }
 
-.box{
+.container{
   background:white;
   padding:20px;
   border-radius:10px;
+  max-width:700px;
+  margin:auto;
 }
 
 input, textarea{
   width:100%;
   padding:10px;
   margin:5px 0 10px 0;
+}
+
+.group{
+  border:1px solid #ddd;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:8px;
 }
 
 .row{
@@ -38,11 +45,8 @@ button{
   background:#1a73e8;
   color:white;
   border:none;
-  font-size:16px;
   cursor:pointer;
 }
-
-button:hover{opacity:0.9}
 
 #status{
   margin-top:10px;
@@ -53,45 +57,60 @@ button:hover{opacity:0.9}
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2>Kundendaten</h2>
+<h2>Bestellung</h2>
 
+<!-- Kunde -->
 <input id="vorname" placeholder="Vorname *">
 <input id="nachname" placeholder="Nachname *">
 <input id="email" placeholder="E-Mail *">
 
-<h3>Adresse</h3>
-<input id="strasse" placeholder="Straße + Hausnummer *">
+<!-- Adresse -->
+<input id="strasse" placeholder="Straße + Nr *">
 <input id="plz" placeholder="PLZ *">
 <input id="ort" placeholder="Ort *">
 <input id="bundesland" placeholder="Bundesland *">
 
-<h3>Termin</h3>
+<!-- Termin -->
 <input id="datum" type="date">
 <input id="uhrzeit" type="time">
 
-<h3>Service</h3>
+<!-- Service -->
 <label><input type="checkbox" id="abbau"> Abbau</label>
 <label><input type="checkbox" id="transport"> Transport</label>
 <label><input type="checkbox" id="aufbau"> Aufbau</label>
 
-<h3>Transporter</h3>
+<!-- Transporter -->
 <label><input type="radio" name="t" value="vorhanden"> vorhanden</label>
 <label><input type="radio" name="t" value="nicht vorhanden"> nicht vorhanden</label>
 
+<!-- Möbel -->
+<div class="group">
 <h3>Möbel</h3>
 
 <div class="row">Sessel <input id="sessel" type="number" value="0"></div>
 <div class="row">Stuhl <input id="stuhl" type="number" value="0"></div>
 <div class="row">Hocker <input id="hocker" type="number" value="0"></div>
+<div class="row">Regal <input id="regal" type="number" value="0"></div>
+<div class="row">Kommode <input id="kommode" type="number" value="0"></div>
 <div class="row">Sofa <input id="sofa" type="number" value="0"></div>
 <div class="row">Couch <input id="couch" type="number" value="0"></div>
 <div class="row">Tisch <input id="tisch" type="number" value="0"></div>
 <div class="row">Bett <input id="bett" type="number" value="0"></div>
+<div class="row">Waschmaschine <input id="waschmaschine" type="number" value="0"></div>
+<div class="row">Trockner <input id="trockner" type="number" value="0"></div>
+<div class="row">Geschirrspüler <input id="spueler" type="number" value="0"></div>
+<div class="row">Herd/Ofen <input id="herd" type="number" value="0"></div>
+<div class="row">TV <input id="tv" type="number" value="0"></div>
+<div class="row">Teppich <input id="teppich" type="number" value="0"></div>
+<div class="row">Matratzen <input id="matratzen" type="number" value="0"></div>
+<div class="row">Fahrrad <input id="fahrrad" type="number" value="0"></div>
+<div class="row">Kühlschrank <input id="kuehlschrank" type="number" value="0"></div>
 
-<h3>Anmerkung</h3>
-<textarea id="note"></textarea>
+</div>
+
+<textarea id="note" placeholder="Anmerkung"></textarea>
 
 <button onclick="send()">Absenden</button>
 
@@ -103,80 +122,78 @@ button:hover{opacity:0.9}
 async function send(){
 
   const status = document.getElementById("status");
-  status.style.color = "black";
   status.innerText = "Sende...";
+
+  const get = id => document.getElementById(id);
+
+  const items = [
+    ["Sessel",sessel.value],
+    ["Stuhl",stuhl.value],
+    ["Hocker",hocker.value],
+    ["Regal",regal.value],
+    ["Kommode",kommode.value],
+    ["Sofa",sofa.value],
+    ["Couch",couch.value],
+    ["Tisch",tisch.value],
+    ["Bett",bett.value],
+    ["Waschmaschine",waschmaschine.value],
+    ["Trockner",trockner.value],
+    ["Geschirrspüler",spueler.value],
+    ["Herd/Ofen",herd.value],
+    ["TV",tv.value],
+    ["Teppich",teppich.value],
+    ["Matratzen",matratzen.value],
+    ["Fahrrad",fahrrad.value],
+    ["Kühlschrank",kuehlschrank.value]
+  ].filter(i => Number(i[1]) > 0)
+   .map(i => ({name:i[0],amount:Number(i[1])}));
+
+  const data = {
+    customer:{
+      vorname:get("vorname").value,
+      nachname:get("nachname").value,
+      email:get("email").value,
+      adresse:{
+        strasse:get("strasse").value,
+        plz:get("plz").value,
+        ort:get("ort").value,
+        bundesland:get("bundesland").value
+      }
+    },
+
+    service:{
+      abbau:abbau.checked,
+      transport:transport.checked,
+      aufbau:aufbau.checked,
+      transporter:document.querySelector('input[name="t"]:checked')?.value || ""
+    },
+
+    termin:{
+      datum:datum.value,
+      uhrzeit:uhrzeit.value
+    },
+
+    items:items,
+    note:note.value
+  };
 
   try{
 
-    // 🔥 sichere DOM-Abfragen (kein Crash mehr)
-    const get = id => document.getElementById(id);
-
-    const data = {
-      customer:{
-        vorname:get("vorname").value,
-        nachname:get("nachname").value,
-        email:get("email").value,
-        adresse:{
-          strasse:get("strasse").value,
-          plz:get("plz").value,
-          ort:get("ort").value,
-          bundesland:get("bundesland").value
-        }
-      },
-
-      service:{
-        abbau:get("abbau").checked,
-        transport:get("transport").checked,
-        aufbau:get("aufbau").checked,
-        transporter:document.querySelector('input[name="t"]:checked')?.value || ""
-      },
-
-      termin:{
-        datum:get("datum").value,
-        uhrzeit:get("uhrzeit").value
-      },
-
-      items:[
-        {name:"Sessel",amount:Number(get("sessel").value)},
-        {name:"Stuhl",amount:Number(get("stuhl").value)},
-        {name:"Hocker",amount:Number(get("hocker").value)},
-        {name:"Sofa",amount:Number(get("sofa").value)},
-        {name:"Couch",amount:Number(get("couch").value)},
-        {name:"Tisch",amount:Number(get("tisch").value)},
-        {name:"Bett",amount:Number(get("bett").value)}
-      ].filter(i => i.amount > 0),
-
-      note:get("note").value
-    };
-
-    const response = await fetch("DEINE_SCRIPT_URL_HIER",{
+    const res = await fetch("https://script.google.com/macros/s/AKfycbz0koZ-OHeFmGMn3CDxK6wbxAtKjgbPUartQdemTEZ-ZDBYDegKWXhZR7m0gSo4opw_nQ/exec",{
       method:"POST",
-      headers:{
-        "Content-Type":"text/plain;charset=utf-8"
-      },
       body:JSON.stringify(data)
     });
 
-    const text = await response.text();
-    console.log("SERVER:",text);
+    const text = await res.text();
 
-    if(text && text.includes("OK")){
-      status.style.color="green";
-      status.innerText="Erfolgreich gesendet!";
-
-      setTimeout(()=>{
-        window.location.href="success.html";
-      },800);
-
+    if(text.includes("OK")){
+      window.location.href="success.html";
     } else {
-      status.style.color="red";
-      status.innerText="Server Fehler: "+text;
+      status.innerText="Fehler: "+text;
     }
 
-  }catch(err){
-    console.error(err);
-    status.style.color="red";
-    status.innerText="Fehler beim Senden (Netzwerk)";
+  }catch(e){
+    status.innerText="Netzwerkfehler";
   }
 }
 </script>
