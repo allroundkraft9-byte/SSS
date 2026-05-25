@@ -1,3 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bestellung</title>
+
+<style>
+body{font-family:Arial;background:#eef2f7;padding:20px;}
+.container{max-width:800px;margin:auto;background:white;padding:25px;border-radius:15px;}
+input,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ddd;}
+button{width:100%;padding:14px;background:#1a73e8;color:white;border:none;border-radius:10px;}
+.row{display:flex;flex-wrap:wrap;gap:10px;background:#f6f6f6;padding:10px;border-radius:10px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Kundendaten</h2>
+
+<input id="vorname" placeholder="Vorname">
+<input id="nachname" placeholder="Nachname">
+<input id="email" placeholder="E-Mail">
+
+<h2>Adresse</h2>
+
+<input id="strasse" placeholder="Straße">
+<input id="plz" placeholder="PLZ">
+<input id="ort" placeholder="Ort">
+<input id="bundesland" placeholder="Bundesland">
+
+<h2>Termin</h2>
+
+<input type="date" id="datum">
+<input type="time" id="uhrzeit">
+
+<h2>Service</h2>
+
+<div class="row">
+<label><input type="checkbox" id="abbau"> Abbau</label>
+<label><input type="checkbox" id="transport"> Transport</label>
+<label><input type="checkbox" id="aufbau"> Aufbau</label>
+</div>
+
+<div class="row">
+<label><input type="radio" name="t" value="vorhanden"> Transporter vorhanden</label>
+<label><input type="radio" name="t" value="stellen"> Transporter stellen</label>
+</div>
+
+<h2>Produkte</h2>
+
+<label><input type="checkbox" id="sessel"> Sessel</label>
+<input id="sesselAmount" type="number">
+
+<label><input type="checkbox" id="stuhl"> Stuhl</label>
+<input id="stuhlAmount" type="number">
+
+<label><input type="checkbox" id="sofa"> Sofa</label>
+<input id="sofaAmount" type="number">
+
+<h2>Anmerkung</h2>
+
+<textarea id="note"></textarea>
+
+<button onclick="send()">Absenden</button>
+
+</div>
+
 <script>
 async function send(){
 
@@ -26,32 +96,11 @@ async function send(){
     items:[
       sessel.checked ? {name:"Sessel",amount:sesselAmount.value||1}:null,
       stuhl.checked ? {name:"Stuhl",amount:stuhlAmount.value||1}:null,
-      hocker.checked ? {name:"Hocker",amount:hockerAmount.value||1}:null,
-      couch.checked ? {name:"Couch",amount:couchAmount.value||1}:null,
-      sofa.checked ? {name:"Sofa",amount:sofaAmount.value||1}:null,
-      liege.checked ? {name:"Liege",amount:liegeAmount.value||1}:null,
-      tisch.checked ? {name:"Tisch",amount:tischAmount.value||1}:null,
-      schreibtisch.checked ? {name:"Schreibtisch",amount:schreibtischAmount.value||1}:null,
-      regal.checked ? {name:"Regal",amount:regalAmount.value||1}:null,
-      kommode.checked ? {name:"Kommode",amount:kommodeAmount.value||1}:null,
-      waschmaschine.checked ? {name:"Waschmaschine",amount:waschmaschineAmount.value||1}:null,
-      trockner.checked ? {name:"Trockner",amount:trocknerAmount.value||1}:null,
-      fernseher.checked ? {name:"Fernseher",amount:fernseherAmount.value||1}:null,
-      geschirrspueler.checked ? {name:"Geschirrspüler",amount:geschirrspuelerAmount.value||1}:null,
-      teppich.checked ? {name:"Teppich",amount:teppichAmount.value||1}:null,
-      matratzen.checked ? {name:"Matratzen",amount:matratzenAmount.value||1}:null,
-      fahrrad.checked ? {name:"Fahrrad",amount:fahrradAmount.value||1}:null,
-      kuehlschrank.checked ? {name:"Kühl-/Gefrierschrank",amount:kuehlschrankAmount.value||1}:null
+      sofa.checked ? {name:"Sofa",amount:sofaAmount.value||1}:null
     ].filter(Boolean),
     note:note.value
   };
 
-  if(!vorname.value || !nachname.value || !email.value){
-    alert("Bitte Pflichtfelder ausfüllen");
-    return;
-  }
-
-  // 🔥 WICHTIG: Daten speichern
   localStorage.setItem("order", JSON.stringify(data));
 
   try{
@@ -60,11 +109,13 @@ async function send(){
       body:JSON.stringify(data)
     });
 
-    // 👉 erst DANACH weiterleiten
-    window.location.href = "success.html";
+    window.location.href="success.html";
 
   }catch(e){
     alert("Fehler beim Senden");
   }
 }
 </script>
+
+</body>
+</html>
