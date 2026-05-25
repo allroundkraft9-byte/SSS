@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Bestellung erhalten</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#eef2f7;
+  padding:20px;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>✅ Anfrage erhalten</h2>
+
+<p>Wir haben deine Anfrage erhalten und melden uns innerhalb von 24 Stunden.</p>
+
+<div id="output"></div>
+
+</div>
+
+<script>
+const data = JSON.parse(localStorage.getItem("order"));
+
+let html = "";
+
+html += "<h3>Kunde</h3>";
+html += data.customer.vorname + " " + data.customer.nachname + "<br>";
+html += data.customer.email + "<br><br>";
+
+html += "<h3>Adresse</h3>";
+html += data.customer.adresse.strasse + "<br>";
+html += data.customer.adresse.plz + " " + data.customer.adresse.ort + "<br><br>";
+
+html += "<h3>Termin</h3>";
+html += data.termin.datum + " " + data.termin.uhrzeit + "<br><br>";
+
+html += "<h3>Service</h3>";
+html += "Abbau: " + data.service.abbau + "<br>";
+html += "Transport: " + data.service.transport + "<br>";
+html += "Aufbau: " + data.service.aufbau + "<br>";
+html += "Transporter: " + data.service.transporter + "<br><br>";
+
+html += "<h3>Produkte</h3>";
+
+data.items.forEach(i=>{
+  html += i.name + " - " + i.amount + "<br>";
+});
+
+html += "<h3>Anmerkung</h3>";
+html += data.note;
+
+document.getElementById("output").innerHTML = html;
+</script>
+
+</body>
+</html>
