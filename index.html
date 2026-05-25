@@ -24,15 +24,27 @@ body{
 
 h2{
   margin-top: 25px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  font-size: 20px;
 }
 
-input{
+h3{
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+input, textarea{
   width: 100%;
   padding: 12px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 10px;
+  font-family: Arial;
+}
+
+textarea{
+  resize: none;
+  height: 100px;
 }
 
 .item{
@@ -98,43 +110,36 @@ button{
 
 <h2>🛒 Produkte</h2>
 
-<div id="products">
-
+<h3>🪑 Sitzmöbel</h3>
 <div class="item"><label><input type="checkbox" id="sessel"> Sessel</label><input type="number" id="sesselAmount" placeholder="Stück"></div>
 <div class="item"><label><input type="checkbox" id="stuhl"> Stuhl</label><input type="number" id="stuhlAmount" placeholder="Stück"></div>
 <div class="item"><label><input type="checkbox" id="hocker"> Hocker</label><input type="number" id="hockerAmount" placeholder="Stück"></div>
 
-<div class="item"><label><input type="checkbox" id="regal"> Regal</label><input type="number" id="regalAmount" placeholder="Stück"></div>
-<div class="item"><label><input type="checkbox" id="kommode"> Kommode</label><input type="number" id="kommodeAmount" placeholder="Stück"></div>
-<div class="item"><label><input type="checkbox" id="koffer"> Koffer</label><input type="number" id="kofferAmount" placeholder="Stück"></div>
-
+<h3>🛋️ Sofas</h3>
 <div class="item"><label><input type="checkbox" id="couch"> Couch</label><input type="number" id="couchAmount" placeholder="Stück"></div>
-<div class="item"><label><input type="checkbox" id="liege"> Liege</label><input type="number" id="liegeAmount" placeholder="Stück"></div>
 <div class="item"><label><input type="checkbox" id="sofa"> Sofa</label><input type="number" id="sofaAmount" placeholder="Stück"></div>
+<div class="item"><label><input type="checkbox" id="liege"> Liege</label><input type="number" id="liegeAmount" placeholder="Stück"></div>
 
+<h3>🪵 Möbel</h3>
 <div class="item"><label><input type="checkbox" id="tisch"> Tisch</label><input type="number" id="tischAmount" placeholder="Stück"></div>
 <div class="item"><label><input type="checkbox" id="schreibtisch"> Schreibtisch</label><input type="number" id="schreibtischAmount" placeholder="Stück"></div>
+<div class="item"><label><input type="checkbox" id="regal"> Regal</label><input type="number" id="regalAmount" placeholder="Stück"></div>
+<div class="item"><label><input type="checkbox" id="kommode"> Kommode</label><input type="number" id="kommodeAmount" placeholder="Stück"></div>
 
-<div class="item"><label><input type="checkbox" id="bettgestell"> Bettgestell</label><input type="number" id="bettgestellAmount" placeholder="Stück"></div>
-
+<h3>🔌 Elektro</h3>
 <div class="item"><label><input type="checkbox" id="waschmaschine"> Waschmaschine</label><input type="number" id="waschmaschineAmount" placeholder="Stück"></div>
 <div class="item"><label><input type="checkbox" id="trockner"> Trockner</label><input type="number" id="trocknerAmount" placeholder="Stück"></div>
-
+<div class="item"><label><input type="checkbox" id="fernseher"> Fernseher</label><input type="number" id="fernseherAmount" placeholder="Stück"></div>
 <div class="item"><label><input type="checkbox" id="geschirrspueler"> Geschirrspüler</label><input type="number" id="geschirrspuelerAmount" placeholder="Stück"></div>
 
-<div class="item"><label><input type="checkbox" id="herd"> Herd</label><input type="number" id="herdAmount" placeholder="Stück"></div>
-<div class="item"><label><input type="checkbox" id="backofen"> Backofen</label><input type="number" id="backofenAmount" placeholder="Stück"></div>
-
-<div class="item"><label><input type="checkbox" id="fernseher"> Fernseher</label><input type="number" id="fernseherAmount" placeholder="Stück"></div>
-
+<h3>📦 Sonstiges</h3>
 <div class="item"><label><input type="checkbox" id="teppich"> Teppich</label><input type="number" id="teppichAmount" placeholder="Stück"></div>
 <div class="item"><label><input type="checkbox" id="matratzen"> Matratzen</label><input type="number" id="matratzenAmount" placeholder="Stück"></div>
-
 <div class="item"><label><input type="checkbox" id="fahrrad"> Fahrrad</label><input type="number" id="fahrradAmount" placeholder="Stück"></div>
-
 <div class="item"><label><input type="checkbox" id="kuehlschrank"> Kühl-/Gefrierschrank</label><input type="number" id="kuehlschrankAmount" placeholder="Stück"></div>
 
-</div>
+<h2>✍️ Anmerkung</h2>
+<textarea id="note" placeholder="z.B. Lieferhinweise, Wünsche, Besonderheiten..."></textarea>
 
 <button onclick="sendData()">Bestellung absenden</button>
 
@@ -157,15 +162,17 @@ async function sendData() {
   const ort = document.getElementById("ort").value.trim();
   const bundesland = document.getElementById("bundesland").value.trim();
 
+  const note = document.getElementById("note").value.trim();
+
   if(!vorname || !nachname || !email || !strasse || !plz || !ort || !bundesland){
-    status.innerText = "Bitte alle Pflichtfelder ausfüllen!";
     status.style.color = "red";
+    status.innerText = "Bitte alle Pflichtfelder ausfüllen!";
     return;
   }
 
   const items = [];
 
-  const addItem = (id, name) => {
+  const addItem = (id,name) => {
     if(document.getElementById(id).checked){
       items.push({
         name,
@@ -177,29 +184,25 @@ async function sendData() {
   addItem("sessel","Sessel");
   addItem("stuhl","Stuhl");
   addItem("hocker","Hocker");
-  addItem("regal","Regal");
-  addItem("kommode","Kommode");
-  addItem("koffer","Koffer");
   addItem("couch","Couch");
-  addItem("liege","Liege");
   addItem("sofa","Sofa");
+  addItem("liege","Liege");
   addItem("tisch","Tisch");
   addItem("schreibtisch","Schreibtisch");
-  addItem("bettgestell","Bettgestell");
+  addItem("regal","Regal");
+  addItem("kommode","Kommode");
   addItem("waschmaschine","Waschmaschine");
   addItem("trockner","Trockner");
-  addItem("geschirrspueler","Geschirrspüler");
-  addItem("herd","Herd");
-  addItem("backofen","Backofen");
   addItem("fernseher","Fernseher");
+  addItem("geschirrspueler","Geschirrspüler");
   addItem("teppich","Teppich");
   addItem("matratzen","Matratzen");
   addItem("fahrrad","Fahrrad");
   addItem("kuehlschrank","Kühl-/Gefrierschrank");
 
   if(items.length === 0){
-    status.innerText = "Bitte mindestens ein Produkt auswählen!";
     status.style.color = "red";
+    status.innerText = "Bitte mindestens ein Produkt auswählen!";
     return;
   }
 
@@ -208,7 +211,7 @@ async function sendData() {
 
   try {
 
-    const response = await fetch("https://script.google.com/macros/s/AKfycbzjOy0c8YkcGfsF1C_RmR61EEKmDQaC5C75Y3SBivvLmjKqixbEwAFy0ztP0a_WA1wfAQ/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbyQkpai_R6H0NkRcWwa04LfSTphC38w-h0929JNBVvX67J9UXARWZ7k1vAkmlbgCvfl2A/exec", {
       method: "POST",
       body: JSON.stringify({
         customer:{
@@ -218,6 +221,7 @@ async function sendData() {
           telefon,
           adresse:{strasse,plz,ort,bundesland}
         },
+        note,
         items
       })
     });
@@ -225,16 +229,16 @@ async function sendData() {
     const text = await response.text();
 
     if(text.includes("OK")){
-      status.innerText = "Bestellung erfolgreich!";
       status.style.color = "green";
+      status.innerText = "Bestellung erfolgreich gesendet!";
     } else {
-      status.innerText = "Fehler: " + text;
       status.style.color = "red";
+      status.innerText = "Fehler: " + text;
     }
 
   } catch(e){
-    status.innerText = "Fehler beim Senden!";
     status.style.color = "red";
+    status.innerText = "Fehler beim Senden!";
   }
 }
 </script>
