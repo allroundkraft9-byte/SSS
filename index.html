@@ -1,37 +1,44 @@
 <script>
+function get(id){
+  return document.getElementById(id);
+}
+
 async function send(){
 
-  const status = document.getElementById("status");
+  const status = get("status");
   status.innerText = "Sende...";
 
-  const get = id => document.getElementById(id);
-
+  // 🪑 Möbel
   const items = [
-    ["Sessel", get("sessel").value],
-    ["Stuhl", get("stuhl").value],
-    ["Hocker", get("hocker").value],
-    ["Regal", get("regal").value],
-    ["Kommode", get("kommode").value],
-    ["Koffer", get("koffer").value],
-    ["Couch", get("couch").value],
-    ["Liege", get("liege").value],
-    ["Sofa", get("sofa").value],
-    ["Tisch", get("tisch").value],
-    ["Schreibtisch", get("schreibtisch").value],
-    ["Bettgestell", get("bett").value],
-    ["Matratzen", get("matratzen").value],
-    ["Waschmaschine", get("waschmaschine").value],
-    ["Trockner", get("trockner").value],
-    ["Geschirrspüler", get("spueler").value],
-    ["Herd/Backofen", get("herd").value],
-    ["Fernseher", get("tv").value],
-    ["Teppich", get("teppich").value],
-    ["Fahrrad", get("fahrrad").value],
-    ["Kühlschrank", get("kuehlschrank").value]
+    ["Sessel","sessel"],
+    ["Stuhl","stuhl"],
+    ["Hocker","hocker"],
+    ["Regal","regal"],
+    ["Kommode","kommode"],
+    ["Koffer","koffer"],
+    ["Couch","couch"],
+    ["Liege","liege"],
+    ["Sofa","sofa"],
+    ["Tisch","tisch"],
+    ["Schreibtisch","schreibtisch"],
+    ["Bettgestell","bett"],
+    ["Matratzen","matratzen"],
+    ["Waschmaschine","waschmaschine"],
+    ["Trockner","trockner"],
+    ["Geschirrspüler","spueler"],
+    ["Herd/Backofen","herd"],
+    ["Fernseher","tv"],
+    ["Teppich","teppich"],
+    ["Fahrrad","fahrrad"],
+    ["Kühlschrank","kuehlschrank"]
   ]
-  .filter(i => Number(i[1]) > 0)
-  .map(i => ({name:i[0], amount:Number(i[1])}));
+  .map(i => ({
+    name:i[0],
+    amount:Number(get(i[1]).value || 0)
+  }))
+  .filter(i => i.amount > 0);
 
+  // 📦 DATA
   const data = {
     customer:{
       vorname: get("vorname").value,
@@ -45,7 +52,6 @@ async function send(){
       }
     },
 
-    // 🔥 FIX: Transportziel korrekt (NICHT mehr ziel.value)
     transportZiel:{
       strasse: get("ziel_strasse").value,
       plz: get("ziel_plz").value,
@@ -78,13 +84,13 @@ async function send(){
 
     const text = await res.text();
 
-    if(text.includes("OK")){
-      status.innerText = "✔ Anfrage erfolgreich gesendet!";
-    } else {
-      status.innerText = "Fehler: " + text;
-    }
+    status.innerText =
+      text.includes("OK")
+      ? "✔ Erfolgreich gesendet!"
+      : "Fehler: " + text;
 
-  } catch(e){
+  }catch(e){
+    console.error(e);
     status.innerText = "Netzwerkfehler";
   }
 }
