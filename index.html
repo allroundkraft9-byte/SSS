@@ -76,46 +76,36 @@ async function sendData() {
 
   const status = document.getElementById("status");
 
-  // 🔴 Kundendaten
-  const vorname = document.getElementById("vorname").value.trim();
-  const nachname = document.getElementById("nachname").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const telefon = document.getElementById("telefon").value.trim();
+  try {
 
-  const strasse = document.getElementById("strasse").value.trim();
-  const plz = document.getElementById("plz").value.trim();
-  const ort = document.getElementById("ort").value.trim();
-  const bundesland = document.getElementById("bundesland").value.trim();
+    const response = await fetch(
+      "DEINE_SCRIPT_URL_HIER",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          test: "Hallo"
+        })
+      }
+    );
 
-  // Pflichtfelder prüfen
-  if (!vorname || !nachname || !email || !strasse || !plz || !ort || !bundesland) {
-    status.innerText = "Bitte alle Pflichtfelder ausfüllen!";
-    return;
+    const text = await response.text();
+
+    console.log("STATUS:", response.status);
+    console.log("TEXT:", text);
+
+    status.innerText =
+      "STATUS: " + response.status + " | TEXT: " + text;
+
+  } catch(error) {
+
+    console.error(error);
+
+    status.innerText =
+      "ECHTER FEHLER: " + error.message;
   }
-
-  // 🛒 Bestellung
-  const items = [];
-
-  if (document.getElementById("sofa").checked) {
-    items.push({ name: "Sofa", amount: document.getElementById("sofaAmount").value || 1 });
-  }
-
-  if (document.getElementById("stuhl").checked) {
-    items.push({ name: "Stuhl", amount: document.getElementById("stuhlAmount").value || 1 });
-  }
-
-  if (document.getElementById("tisch").checked) {
-    items.push({ name: "Tisch", amount: document.getElementById("tischAmount").value || 1 });
-  }
-
-  if (items.length === 0) {
-    status.innerText = "Bitte mindestens einen Artikel auswählen!";
-    return;
-  }
-
-  status.innerText = "Sende...";
-
- <script>
+}
+</script>
+  
 async function sendData() {
 
   const status = document.getElementById("status");
