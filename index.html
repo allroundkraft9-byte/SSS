@@ -14,10 +14,10 @@ body{
 }
 
 .container{
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
   background:white;
-  padding:20px;
+  padding:25px;
   border-radius:12px;
 }
 
@@ -57,8 +57,8 @@ button{
   color:white;
   border:none;
   border-radius:8px;
-  cursor:pointer;
   font-size:16px;
+  cursor:pointer;
 }
 
 #status{
@@ -74,38 +74,84 @@ button{
 
 <h1>Möbel Anfrage</h1>
 
+<!-- KUNDEN -->
 <h2>Kundendaten</h2>
 <input id="vorname" placeholder="Vorname *">
 <input id="nachname" placeholder="Nachname *">
 <input id="email" placeholder="E-Mail *">
 <input id="telefon" placeholder="Telefon (optional)">
 
+<!-- ADRESSE -->
 <h2>Adresse</h2>
-<input id="strasse" placeholder="Straße *">
+<input id="strasse" placeholder="Straße + Hausnummer *">
 <input id="plz" placeholder="PLZ *">
 <input id="ort" placeholder="Ort *">
 <input id="bundesland" placeholder="Bundesland *">
 
+<!-- TRANSPORTZIEL -->
 <h2>Transportziel</h2>
-<input id="ziel_strasse" placeholder="Straße *">
+<input id="ziel_strasse" placeholder="Straße + Hausnummer *">
 <input id="ziel_plz" placeholder="PLZ *">
 <input id="ziel_ort" placeholder="Ort *">
 <input id="ziel_bundesland" placeholder="Bundesland *">
 
+<!-- SERVICE -->
+<h2>Service</h2>
+<label><input type="checkbox" id="abbau"> Abbau</label>
+<label><input type="checkbox" id="transport"> Transport</label>
+<label><input type="checkbox" id="aufbau"> Aufbau</label>
+
+<br><br>
+
+<label><input type="radio" name="t" value="vorhanden"> Transporter vorhanden</label>
+<label><input type="radio" name="t" value="nicht vorhanden"> Kein Transporter</label>
+
+<!-- MÖBEL (JETZT KOMPLETT) -->
 <h2>Möbel</h2>
 
 <div class="row">
-<div class="card">Sofa <input id="sofa" type="number" value="0"></div>
+<div class="card">Sessel <input id="sessel" type="number" value="0"></div>
 <div class="card">Stuhl <input id="stuhl" type="number" value="0"></div>
-<div class="card">Tisch <input id="tisch" type="number" value="0"></div>
+<div class="card">Hocker <input id="hocker" type="number" value="0"></div>
 </div>
 
 <div class="row">
-<div class="card">Schrank <input id="schrank" type="number" value="0"></div>
-<div class="card">Bett <input id="bett" type="number" value="0"></div>
+<div class="card">Regal <input id="regal" type="number" value="0"></div>
+<div class="card">Kommode <input id="kommode" type="number" value="0"></div>
+<div class="card">Koffer <input id="koffer" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Couch <input id="couch" type="number" value="0"></div>
+<div class="card">Liege <input id="liege" type="number" value="0"></div>
+<div class="card">Sofa <input id="sofa" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Tisch <input id="tisch" type="number" value="0"></div>
+<div class="card">Schreibtisch <input id="schreibtisch" type="number" value="0"></div>
+<div class="card">Bettgestell <input id="bett" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Matratzen <input id="matratzen" type="number" value="0"></div>
+<div class="card">Waschmaschine <input id="waschmaschine" type="number" value="0"></div>
+<div class="card">Trockner <input id="trockner" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Geschirrspüler <input id="spueler" type="number" value="0"></div>
+<div class="card">Herd/Backofen <input id="herd" type="number" value="0"></div>
+<div class="card">Fernseher <input id="tv" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Teppich <input id="teppich" type="number" value="0"></div>
+<div class="card">Fahrrad <input id="fahrrad" type="number" value="0"></div>
 <div class="card">Kühlschrank <input id="kuehlschrank" type="number" value="0"></div>
 </div>
 
+<!-- NOTIZ -->
 <h2>Anmerkung</h2>
 <textarea id="note"></textarea>
 
@@ -116,57 +162,60 @@ button{
 </div>
 
 <script>
-function get(id){
-  return document.getElementById(id);
-}
+function g(id){return document.getElementById(id)}
 
 async function send(){
 
-  const status = get("status");
+  const status = g("status");
   status.innerText = "Sende...";
 
   const items = [
-    ["Sofa","sofa"],
-    ["Stuhl","stuhl"],
-    ["Tisch","tisch"],
-    ["Schrank","schrank"],
-    ["Bett","bett"],
-    ["Kühlschrank","kuehlschrank"]
+    ["Sessel","sessel"],["Stuhl","stuhl"],["Hocker","hocker"],
+    ["Regal","regal"],["Kommode","kommode"],["Koffer","koffer"],
+    ["Couch","couch"],["Liege","liege"],["Sofa","sofa"],
+    ["Tisch","tisch"],["Schreibtisch","schreibtisch"],["Bettgestell","bett"],
+    ["Matratzen","matratzen"],["Waschmaschine","waschmaschine"],["Trockner","trockner"],
+    ["Geschirrspüler","spueler"],["Herd/Backofen","herd"],["Fernseher","tv"],
+    ["Teppich","teppich"],["Fahrrad","fahrrad"],["Kühlschrank","kuehlschrank"]
   ]
-  .map(i => ({
-    name:i[0],
-    amount:Number(get(i[1]).value || 0)
-  }))
-  .filter(i => i.amount > 0);
+  .map(i=>({name:i[0],amount:Number(g(i[1]).value||0)}))
+  .filter(i=>i.amount>0);
 
   const data = {
     customer:{
-      vorname:get("vorname").value,
-      nachname:get("nachname").value,
-      email:get("email").value,
-      telefon:get("telefon").value,
+      vorname:g("vorname").value,
+      nachname:g("nachname").value,
+      email:g("email").value,
+      telefon:g("telefon").value,
       adresse:{
-        strasse:get("strasse").value,
-        plz:get("plz").value,
-        ort:get("ort").value,
-        bundesland:get("bundesland").value
+        strasse:g("strasse").value,
+        plz:g("plz").value,
+        ort:g("ort").value,
+        bundesland:g("bundesland").value
       }
     },
 
     transportZiel:{
-      strasse:get("ziel_strasse").value,
-      plz:get("ziel_plz").value,
-      ort:get("ziel_ort").value,
-      bundesland:get("ziel_bundesland").value
+      strasse:g("ziel_strasse").value,
+      plz:g("ziel_plz").value,
+      ort:g("ziel_ort").value,
+      bundesland:g("ziel_bundesland").value
+    },
+
+    service:{
+      abbau:g("abbau").checked,
+      transport:g("transport").checked,
+      aufbau:g("aufbau").checked,
+      transporter:document.querySelector('input[name="t"]:checked')?.value||""
     },
 
     items:items,
-    note:get("note").value
+    note:g("note").value
   };
 
   try{
 
-    const res = await fetch("DEINE_SCRIPT_URL_HIER",{
+    const res = await fetch("https://script.google.com/macros/s/AKfycbxSlPtiOry_jjJ_X7FzSn4A8sSfvS41n88V-5GdQL_8WEiA1BbP9BHvlTXgTUCXJtpC/exec",{
       method:"POST",
       body:JSON.stringify(data)
     });
@@ -175,10 +224,10 @@ async function send(){
 
     status.innerText = text.includes("OK")
       ? "✔ Gesendet!"
-      : "Fehler: " + text;
+      : "Fehler: "+text;
 
   }catch(e){
-    status.innerText = "Netzwerkfehler";
+    status.innerText="Netzwerkfehler";
   }
 }
 </script>
