@@ -1,6 +1,16 @@
 <script>
+window.onerror = function(msg, url, line) {
+  document.body.innerHTML =
+    "<h2 style='color:red;padding:20px'>JS FEHLER:</h2><pre style='padding:20px'>" +
+    msg + " in Zeile " + line + "</pre>";
+};
+
 function get(id){
-  return document.getElementById(id);
+  const el = document.getElementById(id);
+  if(!el){
+    console.log("FEHLT:", id);
+  }
+  return el;
 }
 
 async function send(){
@@ -8,74 +18,72 @@ async function send(){
   const status = get("status");
   status.innerText = "Sende...";
 
-  // 🪑 Möbel
-  const items = [
-    ["Sessel","sessel"],
-    ["Stuhl","stuhl"],
-    ["Hocker","hocker"],
-    ["Regal","regal"],
-    ["Kommode","kommode"],
-    ["Koffer","koffer"],
-    ["Couch","couch"],
-    ["Liege","liege"],
-    ["Sofa","sofa"],
-    ["Tisch","tisch"],
-    ["Schreibtisch","schreibtisch"],
-    ["Bettgestell","bett"],
-    ["Matratzen","matratzen"],
-    ["Waschmaschine","waschmaschine"],
-    ["Trockner","trockner"],
-    ["Geschirrspüler","spueler"],
-    ["Herd/Backofen","herd"],
-    ["Fernseher","tv"],
-    ["Teppich","teppich"],
-    ["Fahrrad","fahrrad"],
-    ["Kühlschrank","kuehlschrank"]
-  ]
-  .map(i => ({
-    name:i[0],
-    amount:Number(get(i[1]).value || 0)
-  }))
-  .filter(i => i.amount > 0);
-
-  // 📦 DATA
-  const data = {
-    customer:{
-      vorname: get("vorname").value,
-      nachname: get("nachname").value,
-      email: get("email").value,
-      adresse:{
-        strasse: get("strasse").value,
-        plz: get("plz").value,
-        ort: get("ort").value,
-        bundesland: get("bundesland").value
-      }
-    },
-
-    transportZiel:{
-      strasse: get("ziel_strasse").value,
-      plz: get("ziel_plz").value,
-      ort: get("ziel_ort").value,
-      bundesland: get("ziel_bundesland").value
-    },
-
-    service:{
-      abbau: get("abbau").checked,
-      transport: get("transport").checked,
-      aufbau: get("aufbau").checked,
-      transporter: document.querySelector('input[name="t"]:checked')?.value || ""
-    },
-
-    termin:{
-      datum: get("datum").value,
-      uhrzeit: get("uhrzeit").value
-    },
-
-    items: items,
-    note: get("note").value
-  };
-
   try{
+
+    const items = [
+      ["Sessel","sessel"],
+      ["Stuhl","stuhl"],
+      ["Hocker","hocker"],
+      ["Regal","regal"],
+      ["Kommode","kommode"],
+      ["Koffer","koffer"],
+      ["Couch","couch"],
+      ["Liege","liege"],
+      ["Sofa","sofa"],
+      ["Tisch","tisch"],
+      ["Schreibtisch","schreibtisch"],
+      ["Bettgestell","bett"],
+      ["Matratzen","matratzen"],
+      ["Waschmaschine","waschmaschine"],
+      ["Trockner","trockner"],
+      ["Geschirrspüler","spueler"],
+      ["Herd/Backofen","herd"],
+      ["Fernseher","tv"],
+      ["Teppich","teppich"],
+      ["Fahrrad","fahrrad"],
+      ["Kühlschrank","kuehlschrank"]
+    ]
+    .map(i => ({
+      name:i[0],
+      amount:Number(get(i[1])?.value || 0)
+    }))
+    .filter(i => i.amount > 0);
+
+    const data = {
+      customer:{
+        vorname: get("vorname")?.value || "",
+        nachname: get("nachname")?.value || "",
+        email: get("email")?.value || "",
+        adresse:{
+          strasse: get("strasse")?.value || "",
+          plz: get("plz")?.value || "",
+          ort: get("ort")?.value || "",
+          bundesland: get("bundesland")?.value || ""
+        }
+      },
+
+      transportZiel:{
+        strasse: get("ziel_strasse")?.value || "",
+        plz: get("ziel_plz")?.value || "",
+        ort: get("ziel_ort")?.value || "",
+        bundesland: get("ziel_bundesland")?.value || ""
+      },
+
+      service:{
+        abbau: get("abbau")?.checked || false,
+        transport: get("transport")?.checked || false,
+        aufbau: get("aufbau")?.checked || false,
+        transporter: document.querySelector('input[name="t"]:checked')?.value || ""
+      },
+
+      termin:{
+        datum: get("datum")?.value || "",
+        uhrzeit: get("uhrzeit")?.value || ""
+      },
+
+      items: items,
+      note: get("note")?.value || ""
+    };
 
     const res = await fetch("https://script.google.com/macros/s/AKfycbzKxyQnd8w4gHiWR9pcB-atY6kt_SUS8ojHhcMfAJfzQlwYhVhRzA_AxQlm9l1WBWebNg/exec",{
       method:"POST",
@@ -84,14 +92,13 @@ async function send(){
 
     const text = await res.text();
 
-    status.innerText =
-      text.includes("OK")
-      ? "✔ Erfolgreich gesendet!"
+    status.innerText = text.includes("OK")
+      ? "✔ Gesendet!"
       : "Fehler: " + text;
 
-  }catch(e){
+  } catch(e){
     console.error(e);
-    status.innerText = "Netzwerkfehler";
+    status.innerText = "FEHLER: " + e.message;
   }
 }
 </script>
