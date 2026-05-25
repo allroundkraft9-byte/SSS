@@ -1,16 +1,16 @@
 <script>
-async function send() {
+async function send(){
 
   const status = document.getElementById("status");
-  status.style.color = "black";
-  status.innerText = "Sende...";
 
-  if (!vorname.value || !nachname.value || !email.value) {
+  // 🔴 Pflichtfelder prüfen
+  if(!vorname.value || !nachname.value || !email.value || !strasse.value || !plz.value || !ort.value || !bundesland.value){
+    status.innerText = "Bitte alle Pflichtfelder ausfüllen!";
     status.style.color = "red";
-    status.innerText = "Bitte Pflichtfelder ausfüllen!";
     return;
   }
 
+  // 🧾 Daten aufbauen (sauber & sicher)
   const data = {
     customer: {
       vorname: vorname.value,
@@ -28,7 +28,7 @@ async function send() {
       abbau: abbau.checked,
       transport: transport.checked,
       aufbau: aufbau.checked,
-      transporter: document.querySelector('input[name="t"]:checked')?.value || ""
+      transporter: document.querySelector('input[name="t"]:checked')?.value || "nicht angegeben"
     },
 
     termin: {
@@ -37,44 +37,63 @@ async function send() {
     },
 
     items: [
-      sessel.checked ? { name: "Sessel", amount: Number(sesselAmount.value || 1) } : null,
-      stuhl.checked ? { name: "Stuhl", amount: Number(stuhlAmount.value || 1) } : null,
-      hocker.checked ? { name: "Hocker", amount: Number(hockerAmount.value || 1) } : null,
-      couch.checked ? { name: "Couch", amount: Number(couchAmount.value || 1) } : null,
-      sofa.checked ? { name: "Sofa", amount: Number(sofaAmount.value || 1) } : null
+      sessel.checked ? {name:"Sessel", amount: Number(sesselAmount.value || 1)} : null,
+      stuhl.checked ? {name:"Stuhl", amount: Number(stuhlAmount.value || 1)} : null,
+      hocker.checked ? {name:"Hocker", amount: Number(hockerAmount.value || 1)} : null,
+      couch.checked ? {name:"Couch", amount: Number(couchAmount.value || 1)} : null,
+      sofa.checked ? {name:"Sofa", amount: Number(sofaAmount.value || 1)} : null,
+      liege.checked ? {name:"Liege", amount: Number(liegeAmount.value || 1)} : null,
+      tisch.checked ? {name:"Tisch", amount: Number(tischAmount.value || 1)} : null,
+      schreibtisch.checked ? {name:"Schreibtisch", amount: Number(schreibtischAmount.value || 1)} : null,
+      regal.checked ? {name:"Regal", amount: Number(regalAmount.value || 1)} : null,
+      kommode.checked ? {name:"Kommode", amount: Number(kommodeAmount.value || 1)} : null,
+      waschmaschine.checked ? {name:"Waschmaschine", amount: Number(waschmaschineAmount.value || 1)} : null,
+      trockner.checked ? {name:"Trockner", amount: Number(trocknerAmount.value || 1)} : null,
+      fernseher.checked ? {name:"Fernseher", amount: Number(fernseherAmount.value || 1)} : null,
+      geschirrspueler.checked ? {name:"Geschirrspüler", amount: Number(geschirrspuelerAmount.value || 1)} : null,
+      teppich.checked ? {name:"Teppich", amount: Number(teppichAmount.value || 1)} : null,
+      matratzen.checked ? {name:"Matratzen", amount: Number(matratzenAmount.value || 1)} : null,
+      fahrrad.checked ? {name:"Fahrrad", amount: Number(fahrradAmount.value || 1)} : null,
+      kuehlschrank.checked ? {name:"Kühl-/Gefrierschrank", amount: Number(kuehlschrankAmount.value || 1)} : null
     ].filter(Boolean),
 
-    note: note.value || ""
+    note: note.value
   };
 
-  try {
+  try{
 
-    const response = await fetch("https://script.google.com/macros/s/AKfycbzLqfZ9zMz4ccJZl5BN_R-abKrqrcLS1HrMpjZ3EU90bSMl7Z8jDWAOrXmU16LH002hgQ/exec", {
+    status.style.color = "black";
+    status.innerText = "Sende...";
+
+    const response = await fetch("DEINE_SCRIPT_URL_HIER", {
       method: "POST",
       headers: {
-        "Content-Type": "text/plain;charset=utf-8"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(data)
     });
 
     const text = await response.text();
+    console.log("Server Antwort:", text);
 
-    if (text.includes("OK")) {
+    if(text.includes("OK")){
       status.style.color = "green";
       status.innerText = "Erfolgreich gesendet!";
 
+      // 👉 OPTIONAL: Weiterleitung
       setTimeout(() => {
         window.location.href = "success.html";
-      }, 700);
+      }, 800);
 
     } else {
       status.style.color = "red";
       status.innerText = "Server Fehler: " + text;
     }
 
-  } catch (error) {
+  }catch(error){
+    console.error(error);
     status.style.color = "red";
-    status.innerText = "Netzwerkfehler!";
+    status.innerText = "Fehler beim Senden!";
   }
 }
 </script>
