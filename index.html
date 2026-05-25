@@ -1,163 +1,5 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Service Anfrage</title>
-
-<style>
-body{
-  font-family: Arial;
-  background:#eef2f7;
-  padding:20px;
-}
-
-.container{
-  max-width:800px;
-  margin:auto;
-  background:white;
-  padding:25px;
-  border-radius:15px;
-}
-
-h2{margin-top:20px;}
-
-input, textarea{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border:1px solid #ddd;
-  border-radius:8px;
-  box-sizing:border-box;
-}
-
-.row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  background:#f6f6f6;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-
-label{
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.row input[type="number"]{
-  width:70px;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  background:#1a73e8;
-  color:white;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-  cursor:pointer;
-}
-
-#status{
-  margin-top:10px;
-  font-weight:bold;
-  text-align:center;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container" id="form">
-
-<h2>🧾 Kundendaten</h2>
-
-<input id="vorname" placeholder="Vorname *">
-<input id="nachname" placeholder="Nachname *">
-<input id="email" placeholder="E-Mail *">
-
-<h2>📍 Adresse</h2>
-
-<input id="strasse" placeholder="Straße + Hausnummer *">
-<input id="plz" placeholder="PLZ *">
-<input id="ort" placeholder="Ort *">
-<input id="bundesland" placeholder="Bundesland *">
-
-<h2>📅 Gewünschter Termin</h2>
-
-<input type="date" id="datum">
-<input type="time" id="uhrzeit">
-
-<h2>🔧 Service</h2>
-
-<div class="row">
-<label><input type="checkbox" id="abbau"> Abbau</label>
-<label><input type="checkbox" id="transport"> Transport</label>
-<label><input type="checkbox" id="aufbau"> Aufbau</label>
-</div>
-
-<div class="row">
-<label><input type="radio" name="t" value="vorhanden"> Transporter vorhanden</label>
-<label><input type="radio" name="t" value="stellen"> Transporter muss gestellt werden</label>
-</div>
-
-<h2>🛒 Produkte</h2>
-
-<h3>Sitzmöbel</h3>
-<div class="row">
-<label><input type="checkbox" id="sessel"> Sessel</label><input type="number" id="sesselAmount">
-<label><input type="checkbox" id="stuhl"> Stuhl</label><input type="number" id="stuhlAmount">
-<label><input type="checkbox" id="hocker"> Hocker</label><input type="number" id="hockerAmount">
-</div>
-
-<h3>Sofas</h3>
-<div class="row">
-<label><input type="checkbox" id="couch"> Couch</label><input type="number" id="couchAmount">
-<label><input type="checkbox" id="sofa"> Sofa</label><input type="number" id="sofaAmount">
-<label><input type="checkbox" id="liege"> Liege</label><input type="number" id="liegeAmount">
-</div>
-
-<h3>Möbel</h3>
-<div class="row">
-<label><input type="checkbox" id="tisch"> Tisch</label><input type="number" id="tischAmount">
-<label><input type="checkbox" id="schreibtisch"> Schreibtisch</label><input type="number" id="schreibtischAmount">
-<label><input type="checkbox" id="regal"> Regal</label><input type="number" id="regalAmount">
-<label><input type="checkbox" id="kommode"> Kommode</label><input type="number" id="kommodeAmount">
-</div>
-
-<h3>Elektro</h3>
-<div class="row">
-<label><input type="checkbox" id="waschmaschine"> Waschmaschine</label><input type="number" id="waschmaschineAmount">
-<label><input type="checkbox" id="trockner"> Trockner</label><input type="number" id="trocknerAmount">
-<label><input type="checkbox" id="fernseher"> Fernseher</label><input type="number" id="fernseherAmount">
-<label><input type="checkbox" id="geschirrspueler"> Geschirrspüler</label><input type="number" id="geschirrspuelerAmount">
-</div>
-
-<h3>Sonstiges</h3>
-<div class="row">
-<label><input type="checkbox" id="teppich"> Teppich</label><input type="number" id="teppichAmount">
-<label><input type="checkbox" id="matratzen"> Matratzen</label><input type="number" id="matratzenAmount">
-<label><input type="checkbox" id="fahrrad"> Fahrrad</label><input type="number" id="fahrradAmount">
-<label><input type="checkbox" id="kuehlschrank"> Kühl-/Gefrierschrank</label><input type="number" id="kuehlschrankAmount">
-</div>
-
-<h2>✍️ Anmerkung</h2>
-<textarea id="note"></textarea>
-
-<button onclick="send()">Absenden</button>
-
-<p id="status"></p>
-
-</div>
-
 <script>
 async function send(){
-
-  const status = document.getElementById("status");
 
   const data = {
     customer:{
@@ -205,27 +47,24 @@ async function send(){
   };
 
   if(!vorname.value || !nachname.value || !email.value){
-    status.innerText="Bitte Pflichtfelder ausfüllen!";
+    alert("Bitte Pflichtfelder ausfüllen");
     return;
   }
 
-  status.innerText="Sende...";
+  // 🔥 WICHTIG: Daten speichern
+  localStorage.setItem("order", JSON.stringify(data));
 
   try{
-
-    await fetch("https://script.google.com/macros/s/AKfycbzLqfZ9zMz4ccJZl5BN_R-abKrqrcLS1HrMpjZ3EU90bSMl7Z8jDWAOrXmU16LH002hgQ/exec",{
+    await fetch("DEINE_SCRIPT_URL_HIER",{
       method:"POST",
       body:JSON.stringify(data)
     });
 
-    document.getElementById("form").innerHTML =
-    "<h2>✅ Anfrage erhalten</h2><p>Wir melden uns innerhalb von 24 Stunden.</p>";
+    // 👉 erst DANACH weiterleiten
+    window.location.href = "success.html";
 
   }catch(e){
-    status.innerText="Fehler beim Senden!";
+    alert("Fehler beim Senden");
   }
 }
 </script>
-
-</body>
-</html>
