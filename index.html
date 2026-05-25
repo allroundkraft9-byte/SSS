@@ -6,11 +6,67 @@
 <title>Bestellung</title>
 
 <style>
-body{font-family:Arial;background:#eef2f7;padding:20px;}
-.container{max-width:800px;margin:auto;background:white;padding:25px;border-radius:15px;}
-input,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ddd;}
-button{width:100%;padding:14px;background:#1a73e8;color:white;border:none;border-radius:10px;}
-.row{display:flex;flex-wrap:wrap;gap:10px;background:#f6f6f6;padding:10px;border-radius:10px;}
+body{
+  font-family: Arial;
+  background:#eef2f7;
+  padding:20px;
+}
+
+.container{
+  max-width:850px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+}
+
+h2{margin-top:20px;}
+
+input, textarea{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border:1px solid #ddd;
+  border-radius:8px;
+  box-sizing:border-box;
+}
+
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  background:#f6f6f6;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+label{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.row input[type="number"]{
+  width:80px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  background:#1a73e8;
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#status{
+  margin-top:10px;
+  font-weight:bold;
+  text-align:center;
+}
 </style>
 </head>
 
@@ -18,25 +74,25 @@ button{width:100%;padding:14px;background:#1a73e8;color:white;border:none;border
 
 <div class="container">
 
-<h2>Kundendaten</h2>
+<h2>🧾 Kundendaten</h2>
 
-<input id="vorname" placeholder="Vorname">
-<input id="nachname" placeholder="Nachname">
-<input id="email" placeholder="E-Mail">
+<input id="vorname" placeholder="Vorname *">
+<input id="nachname" placeholder="Nachname *">
+<input id="email" placeholder="E-Mail *">
 
-<h2>Adresse</h2>
+<h2>📍 Adresse</h2>
 
-<input id="strasse" placeholder="Straße">
-<input id="plz" placeholder="PLZ">
-<input id="ort" placeholder="Ort">
-<input id="bundesland" placeholder="Bundesland">
+<input id="strasse" placeholder="Straße + Hausnummer *">
+<input id="plz" placeholder="Postleitzahl *">
+<input id="ort" placeholder="Ort *">
+<input id="bundesland" placeholder="Bundesland *">
 
-<h2>Termin</h2>
+<h2>📅 Termin</h2>
 
 <input type="date" id="datum">
 <input type="time" id="uhrzeit">
 
-<h2>Service</h2>
+<h2>🔧 Service</h2>
 
 <div class="row">
 <label><input type="checkbox" id="abbau"> Abbau</label>
@@ -46,25 +102,55 @@ button{width:100%;padding:14px;background:#1a73e8;color:white;border:none;border
 
 <div class="row">
 <label><input type="radio" name="t" value="vorhanden"> Transporter vorhanden</label>
-<label><input type="radio" name="t" value="stellen"> Transporter stellen</label>
+<label><input type="radio" name="t" value="stellen"> Transporter muss gestellt werden</label>
 </div>
 
-<h2>Produkte</h2>
+<h2>🛒 Produkte</h2>
 
-<label><input type="checkbox" id="sessel"> Sessel</label>
-<input id="sesselAmount" type="number">
+<h3>Sitzmöbel</h3>
+<div class="row">
+<label><input type="checkbox" id="sessel"> Sessel</label><input type="number" id="sesselAmount">
+<label><input type="checkbox" id="stuhl"> Stuhl</label><input type="number" id="stuhlAmount">
+<label><input type="checkbox" id="hocker"> Hocker</label><input type="number" id="hockerAmount">
+</div>
 
-<label><input type="checkbox" id="stuhl"> Stuhl</label>
-<input id="stuhlAmount" type="number">
+<h3>Sofas</h3>
+<div class="row">
+<label><input type="checkbox" id="couch"> Couch</label><input type="number" id="couchAmount">
+<label><input type="checkbox" id="sofa"> Sofa</label><input type="number" id="sofaAmount">
+<label><input type="checkbox" id="liege"> Liege</label><input type="number" id="liegeAmount">
+</div>
 
-<label><input type="checkbox" id="sofa"> Sofa</label>
-<input id="sofaAmount" type="number">
+<h3>Möbel</h3>
+<div class="row">
+<label><input type="checkbox" id="tisch"> Tisch</label><input type="number" id="tischAmount">
+<label><input type="checkbox" id="schreibtisch"> Schreibtisch</label><input type="number" id="schreibtischAmount">
+<label><input type="checkbox" id="regal"> Regal</label><input type="number" id="regalAmount">
+<label><input type="checkbox" id="kommode"> Kommode</label><input type="number" id="kommodeAmount">
+</div>
 
-<h2>Anmerkung</h2>
+<h3>Elektro</h3>
+<div class="row">
+<label><input type="checkbox" id="waschmaschine"> Waschmaschine</label><input type="number" id="waschmaschineAmount">
+<label><input type="checkbox" id="trockner"> Trockner</label><input type="number" id="trocknerAmount">
+<label><input type="checkbox" id="fernseher"> Fernseher</label><input type="number" id="fernseherAmount">
+<label><input type="checkbox" id="geschirrspueler"> Geschirrspüler</label><input type="number" id="geschirrspuelerAmount">
+</div>
 
+<h3>Sonstiges</h3>
+<div class="row">
+<label><input type="checkbox" id="teppich"> Teppich</label><input type="number" id="teppichAmount">
+<label><input type="checkbox" id="matratzen"> Matratzen</label><input type="number" id="matratzenAmount">
+<label><input type="checkbox" id="fahrrad"> Fahrrad</label><input type="number" id="fahrradAmount">
+<label><input type="checkbox" id="kuehlschrank"> Kühl-/Gefrierschrank</label><input type="number" id="kuehlschrankAmount">
+</div>
+
+<h2>✍️ Anmerkung</h2>
 <textarea id="note"></textarea>
 
 <button onclick="send()">Absenden</button>
+
+<p id="status"></p>
 
 </div>
 
@@ -83,36 +169,65 @@ async function send(){
         bundesland:bundesland.value
       }
     },
+
     service:{
       abbau:abbau.checked,
       transport:transport.checked,
       aufbau:aufbau.checked,
       transporter:document.querySelector('input[name="t"]:checked')?.value
     },
+
     termin:{
       datum:datum.value,
       uhrzeit:uhrzeit.value
     },
+
     items:[
       sessel.checked ? {name:"Sessel",amount:sesselAmount.value||1}:null,
       stuhl.checked ? {name:"Stuhl",amount:stuhlAmount.value||1}:null,
-      sofa.checked ? {name:"Sofa",amount:sofaAmount.value||1}:null
+      hocker.checked ? {name:"Hocker",amount:hockerAmount.value||1}:null,
+
+      couch.checked ? {name:"Couch",amount:couchAmount.value||1}:null,
+      sofa.checked ? {name:"Sofa",amount:sofaAmount.value||1}:null,
+      liege.checked ? {name:"Liege",amount:liegeAmount.value||1}:null,
+
+      tisch.checked ? {name:"Tisch",amount:tischAmount.value||1}:null,
+      schreibtisch.checked ? {name:"Schreibtisch",amount:schreibtischAmount.value||1}:null,
+      regal.checked ? {name:"Regal",amount:regalAmount.value||1}:null,
+      kommode.checked ? {name:"Kommode",amount:kommodeAmount.value||1}:null,
+
+      waschmaschine.checked ? {name:"Waschmaschine",amount:waschmaschineAmount.value||1}:null,
+      trockner.checked ? {name:"Trockner",amount:trocknerAmount.value||1}:null,
+      fernseher.checked ? {name:"Fernseher",amount:fernseherAmount.value||1}:null,
+      geschirrspueler.checked ? {name:"Geschirrspüler",amount:geschirrspuelerAmount.value||1}:null,
+
+      teppich.checked ? {name:"Teppich",amount:teppichAmount.value||1}:null,
+      matratzen.checked ? {name:"Matratzen",amount:matratzenAmount.value||1}:null,
+      fahrrad.checked ? {name:"Fahrrad",amount:fahrradAmount.value||1}:null,
+      kuehlschrank.checked ? {name:"Kühl-/Gefrierschrank",amount:kuehlschrankAmount.value||1}:null
     ].filter(Boolean),
+
     note:note.value
   };
 
-  localStorage.setItem("order", JSON.stringify(data));
+  if(!vorname.value || !nachname.value || !email.value){
+    document.getElementById("status").innerText = "Bitte Pflichtfelder ausfüllen!";
+    return;
+  }
+
+  document.getElementById("status").innerText = "Sende...";
 
   try{
+
     await fetch("https://script.google.com/macros/s/AKfycbzLqfZ9zMz4ccJZl5BN_R-abKrqrcLS1HrMpjZ3EU90bSMl7Z8jDWAOrXmU16LH002hgQ/exec",{
       method:"POST",
       body:JSON.stringify(data)
     });
 
-    window.location.href="success.html";
+    document.getElementById("status").innerText = "Erfolgreich gesendet!";
 
   }catch(e){
-    alert("Fehler beim Senden");
+    document.getElementById("status").innerText = "Fehler beim Senden!";
   }
 }
 </script>
