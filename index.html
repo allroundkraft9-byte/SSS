@@ -1,16 +1,123 @@
-<script>
-window.onerror = function(msg, url, line) {
-  document.body.innerHTML =
-    "<h2 style='color:red;padding:20px'>JS FEHLER:</h2><pre style='padding:20px'>" +
-    msg + " in Zeile " + line + "</pre>";
-};
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Möbel Anfrage</title>
 
+<style>
+body{
+  font-family: Arial;
+  background:#eef2f7;
+  margin:0;
+  padding:20px;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  background:white;
+  padding:20px;
+  border-radius:12px;
+}
+
+h2{
+  border-left:5px solid #1a73e8;
+  padding-left:10px;
+}
+
+input, textarea{
+  width:100%;
+  padding:10px;
+  margin:6px 0 12px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.card{
+  flex:1;
+  min-width:200px;
+  background:#f7f9fc;
+  padding:10px;
+  border-radius:8px;
+  display:flex;
+  justify-content:space-between;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  background:#1a73e8;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+#status{
+  margin-top:10px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Möbel Anfrage</h1>
+
+<h2>Kundendaten</h2>
+<input id="vorname" placeholder="Vorname *">
+<input id="nachname" placeholder="Nachname *">
+<input id="email" placeholder="E-Mail *">
+<input id="telefon" placeholder="Telefon (optional)">
+
+<h2>Adresse</h2>
+<input id="strasse" placeholder="Straße *">
+<input id="plz" placeholder="PLZ *">
+<input id="ort" placeholder="Ort *">
+<input id="bundesland" placeholder="Bundesland *">
+
+<h2>Transportziel</h2>
+<input id="ziel_strasse" placeholder="Straße *">
+<input id="ziel_plz" placeholder="PLZ *">
+<input id="ziel_ort" placeholder="Ort *">
+<input id="ziel_bundesland" placeholder="Bundesland *">
+
+<h2>Möbel</h2>
+
+<div class="row">
+<div class="card">Sofa <input id="sofa" type="number" value="0"></div>
+<div class="card">Stuhl <input id="stuhl" type="number" value="0"></div>
+<div class="card">Tisch <input id="tisch" type="number" value="0"></div>
+</div>
+
+<div class="row">
+<div class="card">Schrank <input id="schrank" type="number" value="0"></div>
+<div class="card">Bett <input id="bett" type="number" value="0"></div>
+<div class="card">Kühlschrank <input id="kuehlschrank" type="number" value="0"></div>
+</div>
+
+<h2>Anmerkung</h2>
+<textarea id="note"></textarea>
+
+<button onclick="send()">ABSENDEN</button>
+
+<p id="status"></p>
+
+</div>
+
+<script>
 function get(id){
-  const el = document.getElementById(id);
-  if(!el){
-    console.log("FEHLT:", id);
-  }
-  return el;
+  return document.getElementById(id);
 }
 
 async function send(){
@@ -18,76 +125,50 @@ async function send(){
   const status = get("status");
   status.innerText = "Sende...";
 
+  const items = [
+    ["Sofa","sofa"],
+    ["Stuhl","stuhl"],
+    ["Tisch","tisch"],
+    ["Schrank","schrank"],
+    ["Bett","bett"],
+    ["Kühlschrank","kuehlschrank"]
+  ]
+  .map(i => ({
+    name:i[0],
+    amount:Number(get(i[1]).value || 0)
+  }))
+  .filter(i => i.amount > 0);
+
+  const data = {
+    customer:{
+      vorname:get("vorname").value,
+      nachname:get("nachname").value,
+      email:get("email").value,
+      telefon:get("telefon").value,
+      adresse:{
+        strasse:get("strasse").value,
+        plz:get("plz").value,
+        ort:get("ort").value,
+        bundesland:get("bundesland").value
+      }
+    },
+
+    transportZiel:{
+      strasse:get("ziel_strasse").value,
+      plz:get("ziel_plz").value,
+      ort:get("ziel_ort").value,
+      bundesland:get("ziel_bundesland").value
+    },
+
+    items:items,
+    note:get("note").value
+  };
+
   try{
 
-    const items = [
-      ["Sessel","sessel"],
-      ["Stuhl","stuhl"],
-      ["Hocker","hocker"],
-      ["Regal","regal"],
-      ["Kommode","kommode"],
-      ["Koffer","koffer"],
-      ["Couch","couch"],
-      ["Liege","liege"],
-      ["Sofa","sofa"],
-      ["Tisch","tisch"],
-      ["Schreibtisch","schreibtisch"],
-      ["Bettgestell","bett"],
-      ["Matratzen","matratzen"],
-      ["Waschmaschine","waschmaschine"],
-      ["Trockner","trockner"],
-      ["Geschirrspüler","spueler"],
-      ["Herd/Backofen","herd"],
-      ["Fernseher","tv"],
-      ["Teppich","teppich"],
-      ["Fahrrad","fahrrad"],
-      ["Kühlschrank","kuehlschrank"]
-    ]
-    .map(i => ({
-      name:i[0],
-      amount:Number(get(i[1])?.value || 0)
-    }))
-    .filter(i => i.amount > 0);
-
-    const data = {
-      customer:{
-        vorname: get("vorname")?.value || "",
-        nachname: get("nachname")?.value || "",
-        email: get("email")?.value || "",
-        adresse:{
-          strasse: get("strasse")?.value || "",
-          plz: get("plz")?.value || "",
-          ort: get("ort")?.value || "",
-          bundesland: get("bundesland")?.value || ""
-        }
-      },
-
-      transportZiel:{
-        strasse: get("ziel_strasse")?.value || "",
-        plz: get("ziel_plz")?.value || "",
-        ort: get("ziel_ort")?.value || "",
-        bundesland: get("ziel_bundesland")?.value || ""
-      },
-
-      service:{
-        abbau: get("abbau")?.checked || false,
-        transport: get("transport")?.checked || false,
-        aufbau: get("aufbau")?.checked || false,
-        transporter: document.querySelector('input[name="t"]:checked')?.value || ""
-      },
-
-      termin:{
-        datum: get("datum")?.value || "",
-        uhrzeit: get("uhrzeit")?.value || ""
-      },
-
-      items: items,
-      note: get("note")?.value || ""
-    };
-
-    const res = await fetch("https://script.google.com/macros/s/AKfycbzKxyQnd8w4gHiWR9pcB-atY6kt_SUS8ojHhcMfAJfzQlwYhVhRzA_AxQlm9l1WBWebNg/exec",{
+    const res = await fetch("DEINE_SCRIPT_URL_HIER",{
       method:"POST",
-      body: JSON.stringify(data)
+      body:JSON.stringify(data)
     });
 
     const text = await res.text();
@@ -96,9 +177,11 @@ async function send(){
       ? "✔ Gesendet!"
       : "Fehler: " + text;
 
-  } catch(e){
-    console.error(e);
-    status.innerText = "FEHLER: " + e.message;
+  }catch(e){
+    status.innerText = "Netzwerkfehler";
   }
 }
 </script>
+
+</body>
+</html>
