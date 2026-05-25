@@ -3,51 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Service Anfrage</title>
+<title>Anfrage</title>
 
 <style>
-body{
-  font-family: Arial;
-  background:#eef2f7;
-  padding:20px;
-}
-
-.container{
-  max-width:750px;
-  margin:auto;
-  background:white;
-  padding:25px;
-  border-radius:15px;
-}
-
-input, textarea{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
-  border:1px solid #ddd;
-}
-
-h3{margin-top:20px;}
-
-.group{
-  background:#f9f9f9;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  background:#1a73e8;
-  color:white;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-}
-
-#status{margin-top:10px;}
+body{font-family:Arial;background:#eef2f7;padding:20px;}
+.container{max-width:750px;margin:auto;background:white;padding:25px;border-radius:15px;}
+input,textarea{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:8px;}
+.row{display:flex;gap:10px;flex-wrap:wrap;background:#f6f6f6;padding:10px;border-radius:10px;margin-bottom:10px;}
+button{width:100%;padding:14px;background:#1a73e8;color:white;border:none;border-radius:10px;}
 </style>
 </head>
 
@@ -55,41 +18,41 @@ button{
 
 <div class="container">
 
-<h2>🧾 Kundendaten</h2>
+<h2>Kundendaten</h2>
 
 <input id="vorname" placeholder="Vorname *">
 <input id="nachname" placeholder="Nachname *">
 <input id="email" placeholder="E-Mail *">
 
-<h2>📍 Adresse</h2>
+<h2>Adresse</h2>
 
 <input id="strasse" placeholder="Straße *">
 <input id="plz" placeholder="PLZ *">
 <input id="ort" placeholder="Ort *">
 <input id="bundesland" placeholder="Bundesland *">
 
+<h2>📅 Termin</h2>
+
+<input type="date" id="datum">
+<input type="time" id="uhrzeit">
+
 <h2>🔧 Service</h2>
 
-<div class="group">
+<div class="row">
 <label><input type="checkbox" id="abbau"> Abbau</label>
 <label><input type="checkbox" id="transport"> Transport</label>
 <label><input type="checkbox" id="aufbau"> Aufbau</label>
 </div>
 
-<div class="group">
-<label><input type="radio" name="transporter" value="vorhanden" id="t1"> Transporter vorhanden</label><br>
-<label><input type="radio" name="transporter" value="nicht" id="t2"> Transporter muss gestellt werden</label>
+<div class="row">
+<label><input type="radio" name="t" value="vorhanden"> Transporter vorhanden</label>
+<label><input type="radio" name="t" value="stellen"> Transporter stellen</label>
 </div>
-
-<h2>📅 Gewünschter Termin</h2>
-
-<input type="date" id="datum">
-<input type="time" id="uhrzeit">
 
 <h2>🛒 Produkte</h2>
 
 <label><input type="checkbox" id="sofa"> Sofa</label>
-<input type="number" id="sofaAmount" placeholder="Stück">
+<input type="number" id="sofaAmount">
 
 <label><input type="checkbox" id="stuhl"> Stuhl</label>
 <input type="number" id="stuhlAmount">
@@ -101,69 +64,55 @@ button{
 
 <textarea id="note"></textarea>
 
-<button onclick="sendData()">Absenden</button>
-
-<p id="status"></p>
+<button onclick="send()">Absenden</button>
 
 </div>
 
 <script>
-async function sendData(){
-
-  const vorname = document.getElementById("vorname").value.trim();
-  const nachname = document.getElementById("nachname").value.trim();
-  const email = document.getElementById("email").value.trim();
-
-  const strasse = document.getElementById("strasse").value.trim();
-  const plz = document.getElementById("plz").value.trim();
-  const ort = document.getElementById("ort").value.trim();
-  const bundesland = document.getElementById("bundesland").value.trim();
-
-  const datum = document.getElementById("datum").value;
-  const uhrzeit = document.getElementById("uhrzeit").value;
-
-  const note = document.getElementById("note").value;
-
-  const abbau = document.getElementById("abbau").checked;
-  const transport = document.getElementById("transport").checked;
-  const aufbau = document.getElementById("aufbau").checked;
-
-  const transporter = document.querySelector('input[name="transporter"]:checked')?.value || "";
-
-  if(!vorname || !nachname || !email || !strasse || !plz || !ort || !bundesland || !datum || !uhrzeit){
-    alert("Bitte alle Pflichtfelder ausfüllen");
-    return;
-  }
-
-  const items = [];
-
-  function add(id,name){
-    if(document.getElementById(id).checked){
-      items.push({
-        name,
-        amount: document.getElementById(id+"Amount").value || 1
-      });
-    }
-  }
-
-  add("sofa","Sofa");
-  add("stuhl","Stuhl");
-  add("tisch","Tisch");
+async function send(){
 
   const data = {
     customer:{
-      vorname,nachname,email,
-      adresse:{strasse,plz,ort,bundesland}
+      vorname: vorname.value,
+      nachname: nachname.value,
+      email: email.value,
+      adresse:{
+        strasse:strasse.value,
+        plz:plz.value,
+        ort:ort.value,
+        bundesland:bundesland.value
+      }
     },
-    service:{abbau,transport,aufbau,transporter},
-    termin:{datum,uhrzeit},
-    items,
-    note
+
+    service:{
+      abbau: abbau.checked,
+      transport: transport.checked,
+      aufbau: aufbau.checked,
+      transporter: document.querySelector('input[name="t"]:checked')?.value
+    },
+
+    termin:{
+      datum: datum.value,
+      uhrzeit: uhrzeit.value
+    },
+
+    items:[
+      sofa.checked ? {name:"Sofa",amount:sofaAmount.value||1}:null,
+      stuhl.checked ? {name:"Stuhl",amount:stuhlAmount.value||1}:null,
+      tisch.checked ? {name:"Tisch",amount:tischAmount.value||1}:null
+    ].filter(Boolean),
+
+    note: note.value
   };
 
   localStorage.setItem("order", JSON.stringify(data));
 
-  window.location.href = "success.html";
+  await fetch("https://script.google.com/macros/s/AKfycbzLqfZ9zMz4ccJZl5BN_R-abKrqrcLS1HrMpjZ3EU90bSMl7Z8jDWAOrXmU16LH002hgQ/exec",{
+    method:"POST",
+    body:JSON.stringify(data)
+  });
+
+  window.location.href="success.html";
 }
 </script>
 
